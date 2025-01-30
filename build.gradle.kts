@@ -42,7 +42,14 @@ kotlin {
     }
 }
 
-
+graalvmNative {
+    binaries {
+        named("main") {
+            imageName.set("JustServe")
+            buildArgs.add("-Ob")
+        }
+    }
+}
 micronaut {
     testRuntime("spock2")
     processing {
