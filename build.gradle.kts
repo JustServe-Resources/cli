@@ -7,7 +7,7 @@ plugins {
     id("io.micronaut.application") version "4.4.4"
 }
 
-version = "0.1"
+version = "0.0.1"
 group = "org.justserve"
 
 val kotlinVersion= project.properties["kotlinVersion"]
