@@ -1,0 +1,20 @@
+name: GraalVM Native Image Test run and build tests
+on: [pull_request]
+jobs:
+  build:
+    name: test and compile on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }} # This actually isn't set, but it's not complaining atm. 
+          native-image-job-reports: 'true'
+      - name: call gradle to run tests and then compile
+        run: ./gradlew test nativeCompile
