@@ -1,3 +1,5 @@
 micronaut:
   application:
     name: cli
+justserve:
+  key: # JUSTSERVE_KEY environment variable
