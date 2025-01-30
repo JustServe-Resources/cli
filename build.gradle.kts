@@ -10,7 +10,7 @@ plugins {
 version = "0.1"
 group = "org.justserve"
 
-val kotlinVersion=project.properties.get("kotlinVersion")
+val kotlinVersion= project.properties["kotlinVersion"]
 repositories {
     mavenCentral()
 }
