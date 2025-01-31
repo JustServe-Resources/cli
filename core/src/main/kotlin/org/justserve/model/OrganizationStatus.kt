@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package org.justserve.model
 
 /**
