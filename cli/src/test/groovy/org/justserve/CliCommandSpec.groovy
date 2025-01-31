@@ -8,9 +8,6 @@ import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
-
 class CliCommandSpec extends Specification {
 
     @Shared @AutoCleanup ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)
