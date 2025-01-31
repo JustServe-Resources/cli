@@ -2,4 +2,5 @@ micronaut:
   application:
     name:
       core
-
+justserve:
+  key: # JUSTSERVE_KEY environment variable
