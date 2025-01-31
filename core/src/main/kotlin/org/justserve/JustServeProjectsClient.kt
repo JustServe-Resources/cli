@@ -1,8 +1,7 @@
 package org.justserve
 
 import io.micronaut.core.async.annotation.SingleResult
-import io.micronaut.http.HttpHeaders.ACCEPT
-import io.micronaut.http.HttpHeaders.USER_AGENT
+import io.micronaut.http.HttpHeaders.*
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.annotation.Headers
@@ -32,6 +31,7 @@ interface JustServeProjectsClient {
      * @return The updated project
      */
     @Put("/{id}")
+    @Header(name = AUTHORIZATION, value = "Bearer {justserve.key}")
     @SingleResult
     fun addProject(
         id: String,
