@@ -28,11 +28,6 @@ dependencies {
     testImplementation("io.micronaut:micronaut-http-client")
 }
 
-application {
-    mainClass = "org.justserve.ApplicationKt"
-}
-java {
-}
 
 micronaut {
     runtime("netty")
