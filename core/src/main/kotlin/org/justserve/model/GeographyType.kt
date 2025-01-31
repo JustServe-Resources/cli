@@ -1,11 +1,14 @@
 @file:Suppress("unused")
 package org.justserve.model
 
+import io.micronaut.serde.annotation.Serdeable
+
 /**
  * JustServe.model.GeographyType
  * @author Jonathan Zollinger
  * @since 0.0.1
  */
+@Serdeable
 enum class GeographyType(val value: Int) {
     All(0),
     Area(1),

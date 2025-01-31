@@ -1,10 +1,13 @@
 package org.justserve.model
 
+import io.micronaut.serde.annotation.Serdeable
+
 /**
  * JustServe.model.TimeSlot
  * @author Jonathan Zollinger
  * @since 0.0.1
  */
+@Serdeable
 data class TimeSlot (
     val id: String? = null,
     val start: String,

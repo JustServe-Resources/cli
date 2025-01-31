@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import org.justserve.model.response.AttachmentInfo
 import org.justserve.model.response.OrganizationSlim
 
+import io.micronaut.serde.annotation.Serdeable
+
 /**
  * JustServe.Contracts.Project
  * @author Jonathan Zollinger
  * @since 0.0.1
  */
+@Serdeable
 data class Project(
     var id: String?,
     var projectOwners: Array<ProjectOwner>?,

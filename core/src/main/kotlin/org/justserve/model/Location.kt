@@ -1,10 +1,13 @@
 package org.justserve.model
 
+import io.micronaut.serde.annotation.Serdeable
+
 /**
  * JustServe.Contracts.Location
  * @author Jonathan Zollinger
  * @since 0.0.1
  */
+@Serdeable
 data class Location(
     val id: String?,
     val ownerType: OwnerType,
