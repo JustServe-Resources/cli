@@ -1,10 +1,15 @@
 package org.justserve
 
+import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.http.HttpHeaders.ACCEPT
 import io.micronaut.http.HttpHeaders.USER_AGENT
+import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.annotation.Headers
+import io.micronaut.http.annotation.Put
 import io.micronaut.http.client.annotation.Client
+import org.justserve.model.Project
+import org.reactivestreams.Publisher
 
 /**
  * Micronaut http client which consumes the JustServe api at /api/v1/users
@@ -18,5 +23,22 @@ import io.micronaut.http.client.annotation.Client
     Header(name = ACCEPT, value = "application/json, application/json-patch+json, text/json, application/*+json")
 )
 interface JustServeProjectsClient {
+    /**
+     * Update a project
+     * @param id The id of the project
+     * @param organizationId The id of the organization which owns the project
+     * @param project The project to update
+     * @param sendUpdate Whether to send an update to the project owners
+     * @return The updated project
+     */
+    @Put("/{id}")
+    @SingleResult
+    fun addProject(
+        id: String,
+        organizationId: String?,
+        sendUpdate: Boolean = false,
+        @Body project: Project
+    ): Publisher<Project>
+
 
 }
