@@ -9,8 +9,9 @@ plugins {
 
 version = "0.0.1"
 group = "org.justserve"
+val kotlinVersion = project.properties["kotlinVersion"]
+val dataFakerVersion = "2.4.2"
 
-val kotlinVersion= project.properties["kotlinVersion"]
 repositories {
     mavenCentral()
 }
@@ -27,8 +28,8 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("net.datafaker:datafaker:${dataFakerVersion}")
 }
-
 
 micronaut {
     runtime("netty")
