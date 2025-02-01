@@ -9,9 +9,7 @@ import io.micronaut.serde.annotation.Serdeable
  * @since 0.0.1
  */
 @Serdeable
-data class OwnerType(val value: Int) {
-    companion object {
-        const val USER = 1
-        const val ORGANIZATION = 2
-    }
+enum class OwnerType(val value: Int) {
+    USER(1),
+    ORGANIZATION(2)
 }
