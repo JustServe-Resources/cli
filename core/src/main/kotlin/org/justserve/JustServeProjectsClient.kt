@@ -31,7 +31,7 @@ interface JustServeProjectsClient {
      * @return The updated project
      */
     @Put("/{id}")
-    @Header(name = AUTHORIZATION, value = "Bearer {justserve.key}")
+    @Header(name = AUTHORIZATION, value = "Bearer {justserve.key}") //JUSTSERVE_KEY environment variable
     @SingleResult
     fun addProject(
         id: String,
