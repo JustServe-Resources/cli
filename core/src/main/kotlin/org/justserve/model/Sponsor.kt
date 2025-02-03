@@ -3,7 +3,7 @@ package org.justserve.model
 import io.micronaut.serde.annotation.Serdeable
 
 /**
- * JustServe.model.Sponsor
+ * JustServe.Contracts.Sponsor
  * @author Jonathan Zollinger
  * @since 0.0.1
  */
