@@ -5,6 +5,9 @@ import net.datafaker.Faker
 import net.datafaker.providers.base.Address
 import org.justserve.model.Location
 import org.justserve.model.OwnerType
+import org.justserve.model.Project
+import org.justserve.model.ProjectStatus
+import org.justserve.model.ProjectType
 
 import static org.justserve.model.OwnerType.ORGANIZATION
 import static org.justserve.model.OwnerType.USER
@@ -14,6 +17,7 @@ import static org.justserve.model.OwnerType.USER
  */
 class DataUtils {
 
+    /* --------------- Location ----------------- */
     /**
      * Returns a location for an organization. Null values are used for all nullable constructor values.
      * The bounding box coordinates are randomly generated within 100 units (in each direction) of a
@@ -55,5 +59,28 @@ class DataUtils {
                 Double.valueOf(address.latitude() - offset),
                 Double.valueOf(address.longitude() - offset),
         )
+    }
+
+    /* --------------- Project ----------------- */
+
+
+    /**
+     * This method returns a new Project object with the provided values.
+     * All nullable fields are set to null.
+     * @param location the location of the project
+     * @param projectType the project type
+     * @param projectStatus the project status
+     * @param created the created date
+     * @param updated the updated date
+     * @param deleted whether the project is deleted
+     * @return new Project object
+     */
+    static Project getTestProject(Location location,
+                                  ProjectType projectType,
+                                  ProjectStatus projectStatus,
+                                  String created,
+                                  String updated,
+                                  boolean deleted) {
+        return new Project(location, projectType, projectStatus, created, updated, deleted)
     }
 }
