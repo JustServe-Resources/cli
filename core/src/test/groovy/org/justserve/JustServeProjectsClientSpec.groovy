@@ -10,7 +10,7 @@ import spock.lang.Specification
 @MicronautTest
 class JustServeProjectsClientSpec extends Specification {
     @Inject
-    JustServeProjectsClient justServeProjectsClient
+    UsersClient justServeProjectsClient
 
     @Shared
     Faker faker;
