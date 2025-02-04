@@ -17,7 +17,7 @@ class DataUtils {
     /**
      * Returns a location for an organization. Null values are used for all nullable constructor values.
      * The bounding box coordinates are randomly generated within 100 units (in each direction) of a
-     * randomly generated lat/lon.
+     * randomly generated lat/long.
      * @return Location object with fake data.
      */
     static Location getTestOrgLocation(Faker faker = new Faker()) {
@@ -27,7 +27,7 @@ class DataUtils {
     /**
      * Returns a Location for a user. Null values are used for all nullable constructor values.
      * The bounding box coordinates are randomly generated within 100 units (in each direction) of a
-     * randomly generated lat/lon.
+     * randomly generated lat/long.
      * @return Location
      */
     static Location getTestUserLocation(Faker faker = new Faker()) {
