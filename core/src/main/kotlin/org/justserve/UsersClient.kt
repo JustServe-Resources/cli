@@ -2,12 +2,10 @@ package org.justserve
 
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.http.HttpHeaders.*
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Header
-import io.micronaut.http.annotation.Headers
-import io.micronaut.http.annotation.Put
+import io.micronaut.http.annotation.*
 import io.micronaut.http.client.annotation.Client
 import org.justserve.model.Project
+import org.justserve.model.response.AdminPendingProjectsResponse
 import org.reactivestreams.Publisher
 
 /**
@@ -16,12 +14,12 @@ import org.reactivestreams.Publisher
  * @author Jonathan Zollinger
  * @since 0.0.1
  */
-@Client(id = "justserve", path = "/api/v1/users")
+@Client(id = "justserve", path = "users")
 @Headers(
     Header(name = USER_AGENT, value = "Micronaut HTTP Client"),
     Header(name = ACCEPT, value = "application/json, application/json-patch+json, text/json, application/*+json")
 )
-interface JustServeProjectsClient {
+interface UsersClient {
     /**
      * Update a project
      * @param id The id of the project
@@ -30,8 +28,8 @@ interface JustServeProjectsClient {
      * @param sendUpdate Whether to send an update to the project owners
      * @return The updated project
      */
-    @Put("/{id}")
-    @Header(name = AUTHORIZATION, value = "Bearer {justserve.key}") //JUSTSERVE_KEY environment variable
+    @Put("/{id}") //is this really accurate? api/v1/users/<id> creates a project?
+    @Header(name = AUTHORIZATION, value = "Bearer {justserve.key}")
     @SingleResult
     fun addProject(
         id: String,
@@ -39,6 +37,24 @@ interface JustServeProjectsClient {
         sendUpdate: Boolean = false,
         @Body project: Project
     ): Publisher<Project>
+
+
+    /**
+     * Retrieve a list of pending projects for an admin user
+     *
+     * @param userID The id of the user
+     * @param adminSubordinateFilterModifier A modifier to control which projects are returned. //TODO: document this
+     * @param page The index of the page of results to return
+     * @param size The number of results to return per page
+     * @return A list of projects
+     */
+    @Post("/{userID}/adminPendingProjects")
+    @Header(name = AUTHORIZATION, value = "Bearer {justserve.key}")
+    fun getAdminPendingProjects(
+        userID: String,
+        @Body adminSubordinateFilterModifier: Int,
+        @Body page: Int, @Body size: Int
+    ): Publisher<AdminPendingProjectsResponse>
 
 
 }

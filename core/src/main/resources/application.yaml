@@ -2,5 +2,9 @@ micronaut:
   application:
     name:
       core
+  http:
+    services:
+      JustServe:
+        url: ${:https://api.justserve.org}
 justserve:
   key: # JUSTSERVE_KEY environment variable
