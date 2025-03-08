@@ -3,6 +3,7 @@
     <ExternalSystemSettings>
       <option name="env">
         <map>
+          <entry key="JUSTSERVE_KEY" value="" />
           <entry key="MICRONAUT_HTTP_SERVICES_JUSTSERVE_URL" value="dev.justserve.org" />
         </map>
       </option>
