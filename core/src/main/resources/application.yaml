@@ -5,6 +5,6 @@ micronaut:
   http:
     services:
       JustServe:
-        url: ${:https://api.justserve.org}
+        url: ${:https://justserve.org}
 justserve:
   key: # JUSTSERVE_KEY environment variable
