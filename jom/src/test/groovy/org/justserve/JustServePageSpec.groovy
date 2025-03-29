@@ -5,12 +5,12 @@ import spock.lang.Unroll
 
 class JustServePageSpec extends GebSpec {
 
-    def setupSpec(){
+    def setupSpec() {
         System.setProperty("geb.build.baseUrl", "https://JustServe.org")
     }
 
     @Unroll
-    def "clicking #link in the header navigates to the #link page"() {
+    def "clicking #link link in the header navigates to the #link page"() {
         when:
         to JustServePage
 
@@ -29,5 +29,6 @@ class JustServePageSpec extends GebSpec {
         "Projects"        | "clickProjects"       | ProjectsPage
         "Organizations"   | "clickOrganizations"  | OrganizationsPage
         "Success Stories" | "clickSuccessStories" | SuccessStoriesPage
+        "Home Page"       | "clickHeaderLogo"     | HomePage
     }
 }

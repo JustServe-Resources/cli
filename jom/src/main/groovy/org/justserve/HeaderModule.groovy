@@ -49,4 +49,13 @@ class HeaderModule extends Module{
         headerSuccessStories.click()
         return new SuccessStoriesPage()
     }
+
+    /**
+     * Clicks the logo in the header.
+     * @return a new instance of the HomePage
+     */
+    HomePage clickHeaderLogo() {
+        headerLogo.click()
+        return new HomePage()
+    }
 }
