@@ -1,10 +1,8 @@
 package org.justserve
 
-import geb.Page
-
-class AboutUsPage extends Page{
+/**
+ * Page object for justserve.org/about
+ */
+class AboutUsPage extends JustServePage{
     static at = { title.contains("About Us - JustServe") }
-    static content = {
-        header { module(HeaderModule)}
-    }
 }
