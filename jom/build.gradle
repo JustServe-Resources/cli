@@ -24,8 +24,12 @@ dependencies {
     implementation "org.seleniumhq.selenium:selenium-firefox-driver:${seleniumVersion}"
 }
 
-tasks.withType(Test).configureEach {
-    maxHeapSize = '1g'
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "started", "passed", "skipped", "failed"
+    }
+    maxHeapSize = "1g"
     jvmArgs = ['-XX:MaxMetaspaceSize=128m']
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL

@@ -17,6 +17,7 @@ repositories {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":jom"))
     kapt("info.picocli:picocli-codegen")
     kapt("io.micronaut.serde:micronaut-serde-processor")
     implementation("info.picocli:picocli")
