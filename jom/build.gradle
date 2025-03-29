@@ -1,0 +1,37 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
+plugins {
+    id 'groovy'
+    id 'com.github.erdi.webdriver-binaries' version '2.7'
+    id 'com.github.erdi.idea-base' version '2.2'
+}
+
+group = 'org.justserve'
+version = project.properties['jomVersion']
+
+repositories {
+    mavenCentral()
+}
+
+def gebVersion = project.properties['gebVersion']
+def spockVersion = project.properties['spockVersion']
+def seleniumVersion = project.properties['seleniumVersion']
+
+dependencies {
+    implementation "org.gebish:geb-spock:${gebVersion}"
+    implementation "org.spockframework:spock-core:${spockVersion}"
+    implementation "org.seleniumhq.selenium:selenium-chrome-driver:${seleniumVersion}"
+    implementation "org.seleniumhq.selenium:selenium-firefox-driver:${seleniumVersion}"
+}
+
+tasks.withType(Test).configureEach {
+    maxHeapSize = '1g'
+    jvmArgs = ['-XX:MaxMetaspaceSize=128m']
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+    }
+}
+
+tasks.withType(GroovyCompile).configureEach {
+    groovyOptions.forkOptions.memoryMaximumSize = '256m'
+}

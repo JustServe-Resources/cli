@@ -4,3 +4,4 @@ plugins {
 rootProject.name="justserve"
 include("core")
 include("cli")
+include("jom")
