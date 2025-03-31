@@ -1,8 +1,6 @@
 package org.justserve
 
 import geb.Page
-import org.openqa.selenium.By
-
 /**
  * Parent Object Model for JustServe Pages
  */
