@@ -23,7 +23,11 @@ dependencies {
     implementation "org.seleniumhq.selenium:selenium-chrome-driver:${seleniumVersion}"
     implementation "org.seleniumhq.selenium:selenium-firefox-driver:${seleniumVersion}"
 }
-
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 test {
     useJUnitPlatform()
     testLogging {
