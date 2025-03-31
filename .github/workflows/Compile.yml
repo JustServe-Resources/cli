@@ -1,0 +1,21 @@
+name: Verify Successful Build on ${{ matrix.os }}
+on: [pull_request]
+jobs:
+  build:
+    name: test and compile on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - name: checkout source
+        uses: actions/checkout@v4
+      - name: setup JVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }} # This actually isn't set, but it's not complaining atm.
+          native-image-job-reports: 'true'
+      - name: Compile to an executable
+        run: ./gradlew  nativeCompile -x test
