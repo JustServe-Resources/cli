@@ -23,5 +23,13 @@ class CliCommandSpec extends Specification {
         expect:
         baos.toString().contains('Hi!')
     }
+
+    void "read cell from excel sheet"(){
+        given:
+        String workbook=new ExcelWorkbook("C:/Users/Bilbo.Sacket/github/JustServeResources/cli-main/cli/src/test/resources/Book.xlsx")
+        String cellValue=workbook.readCell("Sheet1", 0, 0)
+        expect:
+        assert cellValue == "hello world"
+    }
 }
 

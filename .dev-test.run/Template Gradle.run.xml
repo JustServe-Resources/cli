@@ -3,7 +3,7 @@
     <ExternalSystemSettings>
       <option name="env">
         <map>
-          <entry key="JUSTSERVE_KEY" value="" />
+          <entry key="JUSTSERVE_KEY" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnZpcm9ubWVudCI6IjNlMWRjNDVhLTM1MzYtNGUxZi1hNmU2LTRiZGI0YTNiOWM2NiIsImVudmlyb25tZW50SWRlbnRpZmllciI6IlByb2QiLCJwcm9qZWN0IjoiNDQ0NTY3MGYtOTA5YS00ZGYyLTgxN2UtN2U2OWJlZjI5YzkxIiwicHJvamVjdElkZW50aWZpZXIiOiJKdXN0U2VydmUiLCJhY2NvdW50SUQiOiJCb1JWOHVmc1RmeW0wSmxOR3llcWNBIiwib3JnYW5pemF0aW9uIjoiY2Y0YzBiYzgtNmEyNy00NjY1LWIwNTAtMGUwNGY5MDk1MDk3Iiwib3JnYW5pemF0aW9uSWRlbnRpZmllciI6ImRlZmF1bHQiLCJjbHVzdGVySWRlbnRpZmllciI6IjIiLCJrZXlfdHlwZSI6IkNsaWVudCIsInRhcmdldCI6IjU0Y2Q0YWI0LWE5YzMtNDVhMy05ZTlmLTU0ODU3NWI2OWRhMCJ9.fyvogAEKKg7_zCq1cXYadM6pn0UlGkKTpZOsEZP2l5U"/>
           <entry key="MICRONAUT_HTTP_SERVICES_JUSTSERVE_URL" value="dev.justserve.org" />
         </map>
       </option>
