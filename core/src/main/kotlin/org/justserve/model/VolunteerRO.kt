@@ -8,17 +8,17 @@ import io.micronaut.serde.annotation.Serdeable
  * @since 0.0.1
  */
 @Serdeable
-data class VolunteerRO(
-    val userId: String?,
-    val volunteerId: String?,
-    val volunteerLanguage: String?,
-    val name: String?,
-    val email: String?,
-    val phone: String?,
-    val groupSize: Int?,
-    val hoursServed: Double?,
-    val adminReportedHours: Double?,
-    val hoursUpdated: Boolean?,
-    val skills: List<String>?,
-    val volunteeredOn: String?
+data class VolunteerRO @JvmOverloads constructor(
+    val userId: String? = null,
+    val volunteerId: String? = null,
+    val volunteerLanguage: String? = null,
+    val name: String? = null,
+    val email: String? = null,
+    val phone: String? = null,
+    val groupSize: Int? = null,
+    val hoursServed: Double? = null,
+    val adminReportedHours: Double? = null,
+    val hoursUpdated: Boolean? = null,
+    val skills: List<String>? = null,
+    val volunteeredOn: String? = null
 )

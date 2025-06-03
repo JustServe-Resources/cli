@@ -1,4 +1,4 @@
-package org.justserve.model.response
+package org.justserve.model
 
 import io.micronaut.serde.annotation.Serdeable
 

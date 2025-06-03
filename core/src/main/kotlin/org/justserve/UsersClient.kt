@@ -1,11 +1,15 @@
 package org.justserve
 
+import io.micronaut.context.annotation.Value
 import io.micronaut.core.async.annotation.SingleResult
 import io.micronaut.http.HttpHeaders.*
+import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.*
 import io.micronaut.http.client.annotation.Client
 import org.justserve.model.Project
+import org.justserve.model.request.SearchUsersViewModel
 import org.justserve.model.response.AdminPendingProjectsResponse
+import org.justserve.model.response.UserSearchResults
 import org.reactivestreams.Publisher
 
 /**
@@ -14,7 +18,7 @@ import org.reactivestreams.Publisher
  * @author Jonathan Zollinger
  * @since 0.0.1
  */
-@Client(id = "justserve", path = "users")
+@Client(id = "justserve")
 @Headers(
     Header(name = USER_AGENT, value = "Micronaut HTTP Client"),
     Header(name = ACCEPT, value = "application/json, application/json-patch+json, text/json, application/*+json")
@@ -29,7 +33,6 @@ interface UsersClient {
      * @return The updated project
      */
     @Put("/{id}") //is this really accurate? api/v1/users/<id> creates a project?
-    @Header(name = AUTHORIZATION, value = "Bearer {justserve.key}")
     @SingleResult
     fun addProject(
         id: String,
@@ -49,12 +52,14 @@ interface UsersClient {
      * @return A list of projects
      */
     @Post("/{userID}/adminPendingProjects")
-    @Header(name = AUTHORIZATION, value = "Bearer {justserve.key}")
     fun getAdminPendingProjects(
         userID: String,
         @Body adminSubordinateFilterModifier: Int,
         @Body page: Int, @Body size: Int
     ): Publisher<AdminPendingProjectsResponse>
+
+    @Post("/search")
+    fun userSearch(searchQuery: SearchUsersViewModel): Publisher<UserSearchResults>
 
 
 }

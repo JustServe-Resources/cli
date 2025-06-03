@@ -1,8 +1,8 @@
 package org.justserve.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import org.justserve.model.response.AttachmentInfo
-import org.justserve.model.response.OrganizationSlim
+import org.justserve.model.AttachmentInfo
+import org.justserve.model.OrganizationSlim
 
 import io.micronaut.serde.annotation.Serdeable
 
