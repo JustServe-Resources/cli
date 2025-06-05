@@ -46,7 +46,7 @@ micronaut {
             useReactive = false
             useAuth = false
             lombok = true
-            clientId = "micronaut.http.services.zendesk.url"
+            clientId = "micronaut.http.services.justserve"
             apiNameSuffix = "Client"
             alwaysUseGenerateHttpResponse = true
         }
@@ -57,8 +57,7 @@ micronaut {
     }
 }
 
-
-tasks.named("dockerfileNative") {
+tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
     jdkVersion = "21"
 }
 
