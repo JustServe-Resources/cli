@@ -1,0 +1,500 @@
+openapi: 3.0.1
+info:
+  title: User Upsert API
+  description: API for creating or updating a user.
+  version: v1
+paths:
+  /api/v1/users/{userId}:
+    put:
+      tags:
+        - User
+      summary: Upsert a user
+      description: Creates a new user if one does not exist with the given userId, or updates the existing user.
+      operationId: upsertUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Unique identifier of the user.
+          schema:
+            type: string
+            # format: uuid # from original, adjust if your userId isn't a UUID
+      requestBody:
+        description: User object to be created or updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: User updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '201':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid input provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    UserUpdateRequest: # Based on JustServe.Contracts.Requests.UpdateUserModel
+      type: object
+      properties:
+        firstName:
+          maxLength: 50
+          minLength: 1
+          type: string
+          nullable: true
+        lastName:
+          maxLength: 50
+          minLength: 1
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        neighborhood:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        postal:
+          type: string
+          nullable: true
+        country:
+          type: string
+          nullable: true
+        countryCode:
+          type: string
+          nullable: true
+        #        userName: # Note: marked as deprecated in source
+        #          maxLength: 200
+        #          minLength: 5
+        #          type: string
+        #          nullable: true
+        email:
+          type: string
+          nullable: true # Assuming email format, adjust if needed
+        phone:
+          type: string
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        generalEmailOptIn:
+          type: boolean
+          nullable: true
+        generalMarketingOptIn:
+          type: boolean
+          nullable: true
+        volunteerNewsletter:
+          type: boolean
+          nullable: true
+        includeSponsorAdminInfo:
+          type: boolean
+          nullable: true
+        volunteerNewsletterRadius:
+          type: integer
+          format: int32
+          nullable: true
+        adminNewsletter:
+          type: boolean
+          nullable: true
+        skills:
+          type: array
+          items:
+            type: string
+          nullable: true
+        interests:
+          type: array
+          items:
+            type: string
+          nullable: true
+        tools:
+          type: array
+          items:
+            type: string
+          nullable: true
+        userSkills:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        userInterests:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        userTools:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        otherSkills:
+          type: array
+          items:
+            type: string
+          nullable: true
+        otherInterests:
+          type: array
+          items:
+            type: string
+          nullable: true
+        otherTools:
+          type: array
+          items:
+            type: string
+          nullable: true
+        suitableAllAges:
+          type: boolean
+          nullable: true
+        groupProject:
+          type: boolean
+          nullable: true
+        projectFiltersOpen:
+          type: boolean
+          nullable: true
+        volunteerRemotely:
+          type: boolean
+          nullable: true
+        itemDonations:
+          type: boolean
+          nullable: true
+        wheelchairAccessible:
+          type: boolean
+          nullable: true
+        indoors:
+          type: boolean
+          nullable: true
+        disasterReliefRegistrationSeen:
+          type: boolean
+          nullable: true
+        donateToDisasterReliefChecked:
+          type: boolean
+          nullable: true
+        volunteerForDisasterReliefChecked:
+          type: boolean
+          nullable: true
+        disasterReliefAvailabilityDate:
+          type: string
+          format: date-time # Assuming based on name
+          nullable: true
+        keywords:
+          type: string
+          nullable: true
+        timePref:
+          type: integer
+          format: int32
+          nullable: true # Assuming, as not specified but often is
+        radiusType:
+          # Assuming $ref to JustServe.Contracts.DistanceType if you were to include it
+          # For a minimal schema, you might define it inline or omit if not strictly needed for upsert client
+          type: integer
+          format: int32
+          nullable: true
+        daysAvailable:
+          type: array
+          items:
+            # Assuming $ref to System.DayOfWeek if you were to include it
+            type: string # Or integer, depending on how you represent DayOfWeek
+          nullable: true
+        timesAvailable:
+          type: array
+          items:
+            # Assuming $ref to JustServe.Contracts.TimeOfDay if you were to include it
+            type: string # Or integer, depending on how you represent TimeOfDay
+          nullable: true
+      # Add 'required' array if any fields are truly mandatory for an upsert
+      # example:
+      # required:
+      #   - email
+
+    UserResponse: # Based on JustServe.Contracts.Responses.UserResult
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        userName:
+          type: string
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        postal:
+          type: string
+          nullable: true
+        country:
+          type: string
+          nullable: true
+        countryCode:
+          type: string
+          nullable: true
+        countryCode2Char:
+          type: string
+          nullable: true
+        stakeUnitNumber:
+          type: string
+          nullable: true
+        areaUnitNumber:
+          type: string
+          nullable: true
+        areaName:
+          type: string
+          nullable: true
+        areaGeographyId:
+          type: string
+          format: uuid
+          nullable: true
+        isActive:
+          type: boolean
+          nullable: true # Assuming, as not specified but often is
+        trainedDate:
+          type: string
+          format: date-time
+          nullable: true # Assuming, as not specified but often is
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        keywords:
+          type: string
+          nullable: true
+        interests:
+          type: array
+          items:
+            type: string
+          nullable: true
+        skills:
+          type: array
+          items:
+            type: string
+          nullable: true
+        tools:
+          type: array
+          items:
+            type: string
+          nullable: true
+        userSkills:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        userInterests:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        userTools:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        otherSkills:
+          type: array
+          items:
+            type: string
+          nullable: true
+        otherInterests:
+          type: array
+          items:
+            type: string
+          nullable: true
+        otherTools:
+          type: array
+          items:
+            type: string
+          nullable: true
+        suitableAllAges:
+          type: boolean
+          nullable: true # Assuming
+        groupProject:
+          type: boolean
+          nullable: true # Assuming
+        projectFiltersOpen:
+          type: boolean
+          nullable: true # Assuming
+        volunteerRemotely:
+          type: boolean
+          nullable: true # Assuming
+        itemDonations:
+          type: boolean
+          nullable: true # Assuming
+        wheelchairAccessible:
+          type: boolean
+          nullable: true # Assuming
+        indoors:
+          type: boolean
+          nullable: true # Assuming
+        forYouthGroups:
+          type: boolean
+          nullable: true # Assuming
+        sponsorRole:
+          type: boolean
+          nullable: true # Assuming
+        timePref:
+          type: integer
+          format: int32
+          nullable: true # Assuming
+        permissions:
+          type: array
+          items:
+            type: string
+          nullable: true
+        permissionsText:
+          type: string
+          nullable: true
+        isAdmin:
+          type: boolean
+          nullable: true # Assuming
+        isSuperAdmin:
+          type: boolean
+          nullable: true # Assuming
+        assignedLDSAreas:
+          type: array
+          items:
+            type: string
+          nullable: true
+        generalEmailOptIn:
+          type: boolean
+          nullable: true # Assuming
+        generalMarketingOptIn:
+          type: boolean
+          nullable: true
+        volunteerNewsletter:
+          type: boolean
+          nullable: true # Assuming
+        includeSponsorAdminInfo:
+          type: boolean
+          nullable: true # Assuming
+        volunteerNewsletterRadius:
+          type: integer
+          format: int32
+          nullable: true
+        radiusType:
+          # Assuming $ref to JustServe.Contracts.DistanceType if you were to include it
+          type: integer
+          format: int32
+          nullable: true
+        adminNewsletter:
+          type: boolean
+          nullable: true # Assuming
+        viewedWhatsNew:
+          type: boolean
+          nullable: true # Assuming
+        favoriteProjects:
+          type: array
+          items:
+            type: string
+          nullable: true
+        favoriteOrganizations:
+          type: array
+          items:
+            type: string
+          nullable: true
+        volunteeredProjects:
+          type: array
+          items:
+            type: string
+          nullable: true
+        volunteeredTimeSlots:
+          type: array
+          items:
+            # $ref: '#/components/schemas/JustServe.Contracts.Responses.ProjectResponse' # Simplified for minimal schema
+            type: object # Or a more specific slimmed down version
+          nullable: true
+        reportedHours:
+          type: array
+          items:
+            # $ref: '#/components/schemas/JustServe.Contracts.Responses.ReportedHours' # Simplified
+            type: object
+          nullable: true
+        ownsDrafts:
+          type: integer
+          format: int32
+          nullable: true # Assuming
+        ownsProjects:
+          type: integer
+          format: int32
+          nullable: true # Assuming
+        disasterReliefRegistrationSeen:
+          type: boolean
+          nullable: true
+        donateToDisasterReliefChecked:
+          type: boolean
+          nullable: true
+        volunteerForDisasterReliefChecked:
+          type: boolean
+          nullable: true
+        daysAvailable:
+          type: array
+          items:
+            # $ref: '#/components/schemas/System.DayOfWeek' # Simplified
+            type: string # Or integer
+          nullable: true
+        timesAvailable:
+          type: array
+          items:
+            # $ref: '#/components/schemas/JustServe.Contracts.TimeOfDay' # Simplified
+            type: string # Or integer
+          nullable: true
+      # Add 'required' array if any fields are truly mandatory in the response
+      # example:
+      # required:
+      #  - id
+      #  - email
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      required:
+        - code
+        - message

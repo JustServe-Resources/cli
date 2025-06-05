@@ -1,6 +1,6 @@
 applicationType: cli
 defaultPackage: org.justserve
 testFramework: spock
-sourceLanguage: kotlin
-buildTool: gradle_kotlin
-features: [app-name, graalvm, gradle, http-client-test, kapt, kotlin, logback, micronaut-build, picocli, picocli-kotlin-application, picocli-spock, properties, readme, serialization-jackson, shade, spock]
+sourceLanguage: java
+buildTool: gradle
+features: [app-name, gradle, http-client, java, logback, lombok, micronaut-build, picocli, picocli-java-application, picocli-spock, readme, serialization-jackson, shade, spock, yaml, yaml-build]

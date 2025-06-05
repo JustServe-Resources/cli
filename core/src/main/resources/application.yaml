@@ -1,9 +1,0 @@
-micronaut:
-  application:
-    name: core
-  http:
-    services:
-      justserve:
-        url: https://dev.justserve.org # MICRONAUT_HTTP_SERVICES_JUSTSERVE_URL environment variable
-justserve:
-  key: # JUSTSERVE_KEY environment variable
