@@ -1,28 +1,34 @@
 package org.justserve;
 
 import io.micronaut.configuration.picocli.PicocliRunner;
-import io.micronaut.context.ApplicationContext;
-
-import picocli.CommandLine;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import jakarta.inject.Inject;
+import org.justserve.client.UserClient;
+import org.justserve.model.UserHashRequest;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
 @Command(name = "fulcrum", description = "...",
         mixinStandardHelpOptions = true)
 public class FulcrumCommand implements Runnable {
 
-    @Option(names = {"-v", "--verbose"}, description = "...")
-    boolean verbose;
+    @Option(names = {"-e", "--email"}, description = "email for the user whose temporary password will be generated")
+    String email;
 
-    public static void main(String[] args) throws Exception {
+    @Inject
+    UserClient userClient;
+
+    public static void main(String[] args) {
         PicocliRunner.run(FulcrumCommand.class, args);
     }
 
     public void run() {
-        // business logic here
-        if (verbose) {
-            System.out.println("Hi!");
+        HttpResponse<String> response = userClient.getTempPassword(new UserHashRequest(email, null));
+        if (response.status() == HttpStatus.OK) {
+            System.out.println(response.body());
+        } else {
+            System.out.printf("received an unexpected response from JustServe : %d%n", response.status().getCode());
         }
     }
 }

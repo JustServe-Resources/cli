@@ -45,8 +45,8 @@ micronaut {
             modelPackageName = "org.justserve.model"
             useReactive = false
             useAuth = false
-            lombok = true
-            clientId = "micronaut.http.services.justserve"
+            lombok.set(true)
+            clientId = "justserve"
             apiNameSuffix = "Client"
             alwaysUseGenerateHttpResponse = true
         }

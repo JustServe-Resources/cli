@@ -4,5 +4,8 @@ micronaut:
   http:
     services:
       justserve:
-        url:
-        path:
+        url: https://www.justserve.org
+        token:
+jackson:
+  deserialization:
+    ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true
