@@ -9,7 +9,7 @@ import org.justserve.model.UserHashRequest;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(name = "fulcrum", description = "...",
+@Command(name = "justserve", description = "justserve-cli is a terminal tool to help specialists and admin using JustServe",
         mixinStandardHelpOptions = true)
 public class FulcrumCommand implements Runnable {
 
@@ -26,7 +26,7 @@ public class FulcrumCommand implements Runnable {
     public void run() {
         HttpResponse<String> response = userClient.getTempPassword(new UserHashRequest(email, null));
         if (response.status() == HttpStatus.OK) {
-            System.out.println(response.body());
+            System.out.println(response.body().replace("\"", ""));
         } else {
             System.out.printf("received an unexpected response from JustServe : %d%n", response.status().getCode());
         }

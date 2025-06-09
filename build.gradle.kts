@@ -3,6 +3,7 @@ plugins {
     id("io.micronaut.application") version "4.5.3"
     id("com.gradleup.shadow") version "8.3.6"
     id("io.micronaut.openapi") version "4.5.3"
+    id("org.graalvm.buildtools.native") version "0.10.6"
 }
 
 version = "0.0.1"
@@ -56,6 +57,13 @@ micronaut {
         annotations("org.justserve.*")
     }
 }
+
+graalvmNative.binaries {
+    named("main") {
+        imageName.set("justserve")
+    }
+}
+
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
     jdkVersion = "21"

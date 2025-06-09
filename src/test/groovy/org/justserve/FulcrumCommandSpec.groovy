@@ -13,14 +13,20 @@ class FulcrumCommandSpec extends Specification {
 
     void "test fulcrum with command line option"() {
         given:
-        ByteArrayOutputStream baos = new ByteArrayOutputStream()
-        System.setOut(new PrintStream(baos))
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
+        System.setOut(new PrintStream(outputStream))
+        ByteArrayOutputStream error = new ByteArrayOutputStream()
+        System.setErr(new PrintStream(error))
+
 
         String[] args = ['-e', 'jonathan.zollinger+jimmyhook@gmail.com'] as String[]
         PicocliRunner.run(FulcrumCommand, ctx, args)
 
         expect:
-        baos.toString() != null
+        outputStream.toString() != null
+
+        and:
+        error.toString() == null
     }
 }
 
