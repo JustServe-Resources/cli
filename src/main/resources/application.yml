@@ -1,0 +1,11 @@
+micronaut:
+  application:
+    name: fulcrum
+  http:
+    services:
+      justserve:
+        url: https://www.justserve.org
+        token:
+jackson:
+  deserialization:
+    ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true

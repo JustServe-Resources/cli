@@ -1,0 +1,363 @@
+openapi: 3.0.1
+info:
+  title: JustServe Fulcrum HttpClient
+  description: API for automating tasks within JustServe
+  contact:
+    name: Jonathan Zollinger
+  version: v0.0.1
+paths:
+  /api/v1/users/hash:
+    post:
+      operationId: getTempPassword
+      tags:
+        - User
+      description: "retrieves a temporary password for the given user"
+      requestBody: { content: { application/json: { schema: { $ref: '#/components/schemas/UserHashRequest' } } } }
+      responses:
+        '200':
+          description: OK
+          content: { application/json: { schema: { type: string } } }
+#  /api/v1/users/search:
+#    post:
+#      operationId: userSearch
+#      tags:
+#        - User
+#      description: "searches for users based on the provided criteria"
+#      deprecated: true
+#      requestBody: { content: { application/json: { schema: { $ref: '#/components/schemas/UserSearchRequest' } } } }
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema: { $ref: '#/components/schemas/UserSearchResults' }
+#        '400':
+#          description: Bad Request
+#        '500':
+#          description: Internal Server Error
+  /api/v1/users/slimSearch:
+    post:
+      operationId: userSearchSlim
+      tags:
+        - User
+      description: "performs a 'slim search' for users based on the provided criteria"
+      requestBody: { content: { application/json: { schema: { $ref: '#/components/schemas/UserSearchRequest' } } } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserSlimSearchResults' }
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+    UserHashRequest:
+      description: |
+        Either the email or the UID for the user must be provided
+        
+        @author jonathan zollinger
+        @since 0.0.1
+      type: object
+      properties:
+        email: { type: string,  nullable: true }
+        userid: { type: string }
+    UserSearchRequest:
+      description: |
+        search query used in a few different endpoints
+        
+        since 0.0.1
+        @author jonathan zollinger
+      required: [ value, page, size ]
+      type: object
+      properties:
+        value: { minLength: 1, type: string }
+        page:
+          description: "the page number to retrieve"
+          type: integer
+          format: int32
+        size:
+          description: "the number of results per page"
+          type: integer
+          format: int32
+        orderBy:
+          type: string
+          nullable: true
+      additionalProperties: false
+    UserSlimSearchResults:
+      description: |
+        Return object for the user slim search endpoint
+        
+        @author jonathanzollinger
+        @since 0.0.1
+      type: object
+      properties:
+        count: { type: integer, format: int32 }
+        users:
+          type: array
+          items: { $ref: '#/components/schemas/UserSlimSearchResult' }
+          nullable: true
+      additionalProperties: false
+    UserSearchResults:
+      deprecated: true
+      description: |
+        Return object for the user search endpoint
+        
+        @since 0.0.1
+        @author jonathan zollinger
+      type: object
+      properties:
+        count: { type: integer, format: int32 }
+        users:
+          type: array
+          items: { $ref: '#/components/schemas/UserSearchResult' }
+    UserSearchResult:
+      deprecated: true
+      type: object
+      properties:
+        id: { type: string }
+        firstName: { type: string, nullable: true }
+        lastName: { type: string, nullable: true }
+        userName: { type: string, nullable: true }
+        language: { type: string, nullable: true }
+        address: { type: string, nullable: true }
+        neighborhood: { type: string, nullable: true }
+        city: { type: string, nullable: true }
+        state: { type: string, nullable: true }
+        postal: { type: string, nullable: true }
+        country: { type: string, nullable: true }
+        countryCode: { type: string, nullable: true }
+        isActive: { type: boolean }
+        skills: { type: array, items: { type: string }, nullable: true }
+        interests: { type: array, items: { type: string }, nullable: true }
+        tools: { type: array, items: { type: string }, nullable: true }
+        email: { type: string, nullable: true }
+        phone: { type: string, nullable: true }
+        keywords: { type: string, nullable: true }
+        adminRole: { $ref: '#/components/schemas/Role' }
+        organizations: { type: array, items: { $ref: '#/components/schemas/Organization' }, nullable: true }
+        permissions: { type: array, items: { type: string }, nullable: true }
+        assignedAreas: { type: array, items: string, nullable: true }
+        churchBoundaries: { type: array, items: string, nullable: true }
+        civicBoundaries: { type: array, items: string, nullable: true }
+        manageableAdmin: { type: boolean }
+        showsSensitiveInfo: { type: boolean }
+        distance: { type: integer, format: int32 }
+        relativityScore: { type: number, format: double }
+        volunteerProjects: { type: array, items: { $ref: '#/components/schemas/ProjectSlimResponse' } }
+        additionalProperties: false
+    ProjectSlimResponse:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string, nullable: true }
+        description: { type: string, nullable: true }
+        projectExpired: { type: boolean }
+        orgAuthorizationPending: { type: boolean, nullable: true }
+        status: { $ref: '#/components/schemas/ProjectStatus' }
+        startDate: { type: string, format: date-time, nullable: true }
+        endDate: { type: string, format: date-time, nullable: true }
+        locations:
+          type: array
+          items: { $ref: '#/components/schemas/Location' }
+          nullable: true
+        lastChangeReason: { type: string, nullable: true }
+        needsAttention: { type: boolean, nullable: true }
+        isActive: { type: boolean, nullable: true }
+        isUnlistedProject: { type: boolean }
+        isDirectlyOwnedOrSponsored: { type: boolean }
+        isOwnedOrRepresentedViaOrganization: { type: boolean }
+        isIndividualProject: { type: boolean }
+        projectOwnerName: { type: string, nullable: true }
+        projectOwnerUserId: { type: string, nullable: true }
+        relativityScore: { type: number, format: double }
+      additionalProperties: false
+    ProjectStatus:
+      type: string
+      enum:
+        - None
+        - Published
+        - Submitted
+        - Draft
+        - Template
+        - OnHold
+        - Cancelled
+        - Declined
+    UserSlimSearchResult:
+      description: |
+        high level information for a given user
+        
+        @author jonathan zollinger
+        @since 0.0.1
+      type: object
+      properties:
+        id: { type: string }
+        firstName: { type: string, nullable: true }
+        lastName: { type: string, nullable: true }
+        userName: { type: string, nullable: true }
+        email: { type: string, nullable: true, description: "partially obfuscated email for user" }
+        state: { type: string, nullable: true }
+        adminRole: { $ref: '#/components/schemas/Role' }
+        adminRoleName: { type: string, nullable: true }
+        permissions: { type: array, items: { type: string }, nullable: true }
+        organizationName: { type: string, nullable: true }
+        churchBoundaryName: { type: string, nullable: true }
+        showsSensitiveInfo: { type: boolean }
+      additionalProperties: false
+    Organization:
+      type: object
+      properties:
+        id: { type: string }
+        language: { type: string, nullable: true }
+        organizationType: { $ref: '#/components/schemas/OrganizationType' }
+        endorsements: { type: array, items: { $ref: '#/components/schemas/Endorsement' }, nullable: true }
+        owners: { type: array, items: { type: string }, nullable: true }
+        representatives: { type: array, items: { $ref: '#/components/schemas/OrgRepresentative' }, nullable: true }
+        name: { type: string, nullable: true }
+        description: { type: string, nullable: true }
+        status: { $ref: '#/components/schemas/OrganizationStatus' }
+        activationDate: { type: string, format: date-time, nullable: true }
+        firstStartTime: { type: string, format: date-time, nullable: true }
+        finalEndTime: { type: string, format: date-time, nullable: true }
+        website: { type: string, nullable: true }
+        autoRedirect: { type: boolean }
+        url: { type: string, nullable: true }
+        internalURL: { type: string, nullable: true }
+        location: { $ref: '#/components/schemas/Location' }
+        logo: { type: string, nullable: true }
+        banner: { type: string, nullable: true }
+        facebookPath: { type: string, nullable: true }
+        googlePath: { type: string, nullable: true }
+        twitterPath: { type: string, nullable: true }
+        youTubePath: { type: string, nullable: true }
+        instagramPath: { type: string, nullable: true }
+        linkedInPath: { type: string, nullable: true }
+        contactName: { type: string, nullable: true }
+        contactPhone: { type: string, nullable: true }
+        contactEmail: { type: string, nullable: true }
+        linkedProjects:
+          type: array
+          items: { type: string }
+          nullable: true
+        created: { type: string, format: date-time }
+        updated: { type: string, format: date-time }
+        createdBy: { type: string, nullable: true }
+        updatedBy: { type: string, nullable: true }
+        deleted: { type: boolean }
+        deletedOn: { type: string, format: date-time, nullable: true }
+        deletedBy: { type: string, format: uuid, nullable: true }
+        aboutUs: { type: string, nullable: true }
+        volunteerCenterInfo: { $ref: '#/components/schemas/VolunteerCenterInfo' }
+        projectsData:
+          type: array
+          items: { $ref: '#/components/schemas/ProjectSlimResponse' }
+          nullable: true
+        totalProjectCount: { type: integer, format: int32 }
+        userCanEndorse: { type: boolean }
+        relativityScore: { type: number, format: double }
+        volunteerCenterParents:
+          type: array
+          items: { $ref: '#/components/schemas/OrganizationSlimResponse' }
+          nullable: true
+        additionalProperties: false
+    OrganizationSlimResponse:
+      type: object
+      properties:
+        id: { type: string, nullable: true }
+        organizationType: { $ref: '#/components/schemas/OrganizationType' }
+        title: { type: string, nullable: true }
+        logo: { type: string, nullable: true }
+        url: { type: string, nullable: true }
+        internalURL: { type: string, nullable: true }
+        website: { type: string, nullable: true }
+        description: { type: string, nullable: true }
+        contactName: { type: string, nullable: true }
+        contactPhone: { type: string, nullable: true }
+        contactEmail: { type: string, nullable: true }
+        isIndividualProject: { type: boolean }
+        status: { $ref: '#/components/schemas/OrganizationStatus' }
+    OrganizationType:
+      type: string
+      enum:
+        - None
+        - Organization
+        - VolunteerCenter
+        - DisasterRelief
+    OrganizationStatus:
+      type: string
+      enum:
+        - None
+        - Active
+        - Inactive
+        - Pending
+        - Rejected
+    Endorsement:
+      type: object
+      properties:
+        id: { type: string }
+        organizationId: { type: string }
+        userid: { type: string }
+        created: { type: string, format: date-time }
+        updated: { type: string, format: date-time }
+        createdBy: { type: string, nullable: true }
+        updatedBy: { type: string, nullable: true }
+        deleted: { type: boolean }
+        deletedOn: { type: string, format: date-time, nullable: true }
+        deletedBy: { type: string, format: uuid, nullable: true }
+      additionalProperties: false
+    OrgRepresentative:
+      type: object
+      properties:
+        id: { type: string }
+        organizationId: { type: string }
+        userid: { type: string }
+        created: { type: string, format: date-time }
+        updated: { type: string, format: date-time }
+        createdBy: { type: string, nullable: true }
+        updatedBy: { type: string, nullable: true }
+        deleted: { type: boolean }
+        deletedOn: { type: string, format: date-time, nullable: true }
+        deletedBy: { type: string, format: uuid, nullable: true }
+      additionalProperties: false
+    Location:
+      type: object
+      properties: { latitude: { type: number, format: double },
+                    longitude: { type: number, format: double } }
+      additionalProperties: false
+    VolunteerCenterInfo:
+      type: object
+      properties:
+        parentOrganizationId: { type: string }
+        parentOrganizationName: { type: string, nullable: true }
+        childOrganizationIds:
+          type: array
+          items: { type: string }
+          nullable: true
+    Role:
+      type: string
+      enum: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ]
+      x-enum-varnames: [
+        "none",
+        "city",
+        "county",
+        "state",
+        "country",
+        "orgAdmin",
+        "orgLeadAdmin",
+        "stakeAdmin",
+        "stakeLeadAdmin",
+        "ccAdmin",
+        "ccLeadAdmin",
+        "missionAdmin",
+        "missionLeadAdmin",
+        "nationalAdmin",
+        "nationalLeadAdmin",
+        "areaAdmin",
+        "areaLeadAdmin",
+        "globalAdmin",
+        "globalLeadAdmin",
+        "developer"
+      ]
