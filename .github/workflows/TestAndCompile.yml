@@ -16,4 +16,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
       - name: call gradle to run tests and then compile
-        run: ./gradlew test cli:nativeCompile
+        run: ./gradlew test nativeCompile
