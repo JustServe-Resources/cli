@@ -4,6 +4,7 @@ plugins {
     id("com.gradleup.shadow") version "8.3.6"
     id("io.micronaut.openapi") version "4.5.3"
     id("org.graalvm.buildtools.native") version "0.10.6"
+    id("io.micronaut.aot") version "4.5.3"
 }
 
 version = project.properties["justserve-cli-version"]!!
@@ -55,6 +56,18 @@ micronaut {
     processing {
         incremental(true)
         annotations("org.justserve.*")
+    }
+    aot {
+        // Please review carefully the optimizations enabled below
+        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+        optimizeServiceLoading = false
+        convertYamlToJava = false
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+        replaceLogbackXml = true
     }
 }
 
