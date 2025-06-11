@@ -4,6 +4,9 @@ jobs:
   build:
     name: test and compile on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    env:
+      MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN: ${{ secrets.MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN }}
+
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
