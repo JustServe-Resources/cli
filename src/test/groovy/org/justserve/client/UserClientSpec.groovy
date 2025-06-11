@@ -14,26 +14,11 @@ class UserClientSpec extends Specification {
     @Shared
     UserClient userClient
 
-//    def "search users using slimSearch"() {
-//        when:
-//        def response = userClient."${methodName}"(new UserSearchRequest("barney", 0, 10))
-//
-//        then:
-//        response.status() == HttpStatus.OK
-//
-//        and:
-//        response.body().getUsers() != null
-//
-//        where:
-//        methodName       | _
-//        "userSearchSlim" | _
-//        "userSearch"     | _
-//    }
 
     def "get tempPassword for user"() {
         when:
         def response = userClient.getTempPassword(
-                new UserHashRequest("jonathan.zollinger+jimmyhook@gmail.com", null))
+                new UserHashRequest("jimmy@justserve.org", null))
 
         then:
         response.status() == HttpStatus.OK
