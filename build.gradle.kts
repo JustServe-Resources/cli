@@ -74,7 +74,10 @@ micronaut {
 graalvmNative.binaries {
     named("main") {
         imageName.set("justserve")
+        // could not find a way to just exclude the one warning
+        buildArgs.add("-q")
     }
+
 }
 
 
