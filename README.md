@@ -34,7 +34,7 @@ choco install graalvm-java21 21.0.2
 <li> Be sure that `$env:java_home` is assigned to the graalvm.
 
 ```PowerShell
-echo java_home
+echo $env:java_home
 ```
 </li>
 </ol>
