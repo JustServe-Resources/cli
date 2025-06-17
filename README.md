@@ -6,9 +6,6 @@ This tool is very much under development and whose api is subject to change with
 
 ### Install
 
-> [!WARNING]
-> JustServe Cli tool uses gradle and the graalvm to create a native executable. This results in a very performant binary, but requires a lot of your computer's resources when generating the executable (this is called compiling). This resource allocation is determined by your system's available resources, thus the compile time will depend on your unique hardware setup.
-
 <details><summary>instructions to set up graalvm build dependencies</summary>
 
 You will need Visual Studio 2022 build tools installed on your machine to generate an executable with the graalvm, as well as GraalVM-CE v21
