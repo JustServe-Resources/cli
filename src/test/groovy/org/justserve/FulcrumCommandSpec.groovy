@@ -3,30 +3,63 @@ package org.justserve
 import io.micronaut.configuration.picocli.PicocliRunner
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.util.regex.Pattern
+
 class FulcrumCommandSpec extends Specification {
 
-    @Shared @AutoCleanup ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)
+    @Shared
+    Pattern versionRegex = Pattern.compile "^(\\d\\.){2}\\d\\s{1,2}\$"
 
-    void "test fulcrum with command line option"() {
-        given:
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
-        System.setOut(new PrintStream(outputStream))
-        ByteArrayOutputStream error = new ByteArrayOutputStream()
-        System.setErr(new PrintStream(error))
+    @Shared
+    Pattern blankRegex = Pattern.compile "^\\s*\$"
 
+    @Shared
+    Pattern errorRegex = Pattern.compile "^received an unexpected response from JustServe: \\d+ \\(.*\\)\\s*\$"
 
-        String[] args = ['-e', 'jonathan.zollinger+jimmyhook@gmail.com'] as String[]
-        PicocliRunner.run(FulcrumCommand, ctx, args)
+    void "smoke test with command line options"() {
+        when:
+        def (outputStream, errorStream) = executeCommand(args)
 
-        expect:
-        outputStream.toString() != null
+        then:
+        outputStream.toString().matches(expectedOutputValue)
 
         and:
-        error.toString() == null
+        errorStream.toString().matches(expectedErrorOutput)
+
+        where:
+        args                                           | expectedOutputValue                | expectedErrorOutput | _
+        new String[]{'-e', 'jimmy@justserve.org'}      | Pattern.compile("^\\w+\\s{1,2}\$") | blankRegex          | _
+        new String[]{'--email', 'jimmy@justserve.org'} | Pattern.compile("^\\w+\\s{1,2}\$") | blankRegex          | _
+        new String[]{'-v'}                             | versionRegex                       | blankRegex          | _
+        new String[]{"--version"}                      | versionRegex                       | blankRegex          | _
+        new String[]{"version"}                        | versionRegex                       | blankRegex          | _
+        new String[]{"-v"}                             | versionRegex                       | blankRegex          | _
+        //failures
+        new String[]{'-e', 'notanemail@mail.moc'}      | blankRegex                         | errorRegex          | _
+
+    }
+
+    /**
+     * Execute a command with the given arguments and return a pair of streams as stdout and stderr.
+     *
+     * This method captures the stdout and stderr, runs the command using the PicocliRunner,
+     * and then returns the output streams.
+     *
+     * @param args the arguments to pass to the command
+     * @return an array containing the output stream and error stream
+     */
+    String[] executeCommand(String... args) {
+        OutputStream out = new ByteArrayOutputStream()
+        OutputStream err = new ByteArrayOutputStream()
+        System.setOut(new PrintStream(out))
+        System.setErr(new PrintStream(err))
+        try (ApplicationContext ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)) {
+            PicocliRunner.run(FulcrumCommand.class, ctx, args)
+        }
+        return new String[]{out, err}
     }
 }
 

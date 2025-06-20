@@ -1,9 +1,11 @@
 package org.justserve.client
 
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
-import org.justserve.model.UserHashRequest
+import org.justserve.model.UserHashRequestByEmail
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -14,31 +16,28 @@ class UserClientSpec extends Specification {
     @Shared
     UserClient userClient
 
-//    def "search users using slimSearch"() {
-//        when:
-//        def response = userClient."${methodName}"(new UserSearchRequest("barney", 0, 10))
-//
-//        then:
-//        response.status() == HttpStatus.OK
-//
-//        and:
-//        response.body().getUsers() != null
-//
-//        where:
-//        methodName       | _
-//        "userSearchSlim" | _
-//        "userSearch"     | _
-//    }
 
-    def "get tempPassword for user"() {
+    def "get tempPassword for #email"() {
         when:
-        def response = userClient.getTempPassword(
-                new UserHashRequest("jonathan.zollinger+jimmyhook@gmail.com", null))
+        HttpResponse<String> response = null
+        def caughtException = null
+        try {
+            response = userClient.getTempPassword(new UserHashRequestByEmail(email))
+        } catch (e) {
+            caughtException = e.class
+        }
 
         then:
-        response.status() == HttpStatus.OK
+        if (null != caughtException) {
+            caughtException == expectedException
+        } else {
+            expectedResponse == response.status()
+            response.body() != null
+        }
 
-        and:
-        response.body() != null
+        where:
+        expectedResponse | email                 | expectedException
+        HttpStatus.OK    | "jimmy@justserve.org" | null
+        null             | "notanemail@mail.moc" | HttpClientResponseException
     }
 }
