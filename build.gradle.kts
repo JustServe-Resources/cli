@@ -74,7 +74,9 @@ micronaut {
 graalvmNative.binaries {
     named("main") {
         imageName.set("justserve")
+
     }
+
 }
 
 

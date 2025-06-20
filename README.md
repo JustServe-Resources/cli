@@ -6,12 +6,9 @@ This tool is very much under development and whose api is subject to change with
 
 ### Install
 
-> [!WARNING]
-> JustServe Cli tool uses gradle and the graalvm to create a native executable. This results in a very performant binary, but requires a lot of your computer's resources when generating the executable (this is called compiling). This resource allocation is determined by your system's available resources, thus the compile time will depend on your unique hardware setup.
-
 <details><summary>instructions to set up graalvm build dependencies</summary>
 
-You will need Visual Studio 2022 build tools installed on your machine to generate an executable with the graalvm, as well as GraalVM-CE v17
+You will need Visual Studio 2022 build tools installed on your machine to generate an executable with the graalvm, as well as GraalVM-CE v21
 <ol>
 <li>
 Call this command to install both the visual studio community ide and its build tools. This also calls Chocolatey to install the graalvm, which you can choose to do through your IDE later as well.
@@ -20,7 +17,7 @@ Call this command to install both the visual studio community ide and its build 
 @("BuildTools", "Community" ) | 
     % { winget install "Microsoft.VisualStudio.2022.$($_)" }
     
-choco install graalvm-java17
+choco install graalvm-java21 21.0.2
  ```
 </li>
 <li> After installing the Visual Studio Community IDE, install the "Desktop development with C++" package found under "Workloads".
@@ -40,8 +37,8 @@ echo $env:java_home
 </ol>
 </details>
 
-To generate the executable for your system, run `./gradlew cli:nativeCompile`. The executable will be generated in the build directory (`\build\native\nativeCompile\`).
+To generate the executable for your system, run `./gradlew nativeCompile`. The executable will be generated in the build directory (`\build\native\nativeCompile\`).
 
 ### Authenticate
 
-Authenticate with this tool by defining the JUSTSERVE_KEY environment variable. This variable needs to be the bearer token used in api calls when browsing JustServe. 
+Authenticate with this tool by defining the `MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN` environment variable. Then request a token from the help center to populate the variable. 

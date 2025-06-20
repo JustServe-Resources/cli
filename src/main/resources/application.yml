@@ -5,7 +5,7 @@ micronaut:
     services:
       justserve:
         url: https://www.justserve.org
-        token:
+        MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN:
 jackson:
   deserialization:
     ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true
