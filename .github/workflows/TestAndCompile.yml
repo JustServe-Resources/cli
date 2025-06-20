@@ -20,3 +20,7 @@ jobs:
           native-image-job-reports: 'true'
       - name: call gradle to run tests and then compile
         run: ./gradlew test nativeCompile
+      - name: upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: justserve-${{ matrix.os }}
