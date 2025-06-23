@@ -6,7 +6,7 @@ plugins {
     id("org.graalvm.buildtools.native") version "0.10.6"
 }
 
-version = "0.0.1"
+version = project.properties["justserveCliVersion"]!!
 group = "org.justserve"
 
 repositories {
