@@ -19,7 +19,7 @@ public class FulcrumCommand implements Runnable {
     @Option(names = {"version", "--version", "-v"})
     boolean version = false;
 
-    String justServeCliVersion = "0.0.2";
+    String justServeCliVersion = "0.0.3-SNAPSHOT";
 
     @Inject
     UserClient userClient;
@@ -31,21 +31,22 @@ public class FulcrumCommand implements Runnable {
     public void run() {
         if (version) {
             justServePrint(justServeCliVersion);
-        } else {
-            HttpResponse<String> response;
-            try {
-                response = userClient.getTempPassword(new UserHashRequestByEmail(email));
-            } catch (HttpClientResponseException e) {
-                justServePrintErr("received an unexpected response from JustServe: %d (%s)%n",
-                        e.getResponse().status().getCode(), e.reason());
-                return;
-            }
-            if (response != null) {
-                justServePrint(response.body().replace("\"", ""));
-            } else {
-                justServePrintErr("An unexpected error occurred. Response from JustServe was null.");
-            }
+            return;
         }
+        HttpResponse<String> response;
+        try {
+            response = userClient.getTempPassword(new UserHashRequestByEmail(email));
+        } catch (HttpClientResponseException e) {
+            justServePrintErr("received an unexpected response from JustServe: %d (%s)%n",
+                    e.getResponse().status().getCode(), e.reason());
+            return;
+        }
+        if (response != null) {
+            justServePrint(response.body().replace("\"", ""));
+        } else {
+            justServePrintErr("An unexpected error occurred. Response from JustServe was null.");
+        }
+
     }
 
     void justServePrint(String message) {
