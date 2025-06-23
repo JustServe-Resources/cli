@@ -13,9 +13,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
       - name: call gradle to run tests and then compile
-        run: ./gradlew test cli:nativeCompile
+        run: ./gradlew test nativeCompile
+      - name: upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: justserve-${{ matrix.os }}
+          path: build/native/nativeCompile/justserve*
