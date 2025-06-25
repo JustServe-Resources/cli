@@ -38,9 +38,11 @@ java {
     sourceCompatibility = JavaVersion.toVersion("21")
     targetCompatibility = JavaVersion.toVersion("21")
 }
-
-
-
+tasks.withType<Test>().configureEach {
+    // This makes the project version available as a system property to the test JVM.
+    // Micronaut can then read and inject it using @Value.
+    systemProperty("justserveCliVersion", version)
+}
 micronaut {
     testRuntime("spock2")
     openapi {
