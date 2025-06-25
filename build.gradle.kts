@@ -4,10 +4,13 @@ plugins {
     id("com.gradleup.shadow") version "8.3.6"
     id("io.micronaut.openapi") version "4.5.3"
     id("org.graalvm.buildtools.native") version "0.10.6"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
 }
 
 version = project.properties["justserveCliVersion"]!!
 group = "org.justserve"
+
+apply(from="gradle/asciidoc.gradle")
 
 repositories {
     mavenCentral()
@@ -30,6 +33,7 @@ dependencies {
 application {
     mainClass = "org.justserve.FulcrumCommand"
 }
+
 java {
     sourceCompatibility = JavaVersion.toVersion("21")
     targetCompatibility = JavaVersion.toVersion("21")
