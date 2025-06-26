@@ -9,18 +9,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * A Micronaut client filter that adds a bearer token to outgoing requests.
+ * This filter is applied to all requests ("/**") and requires the
+ * `justserve.token` property to be set.
+ */
+@SuppressWarnings("unused")
 @ClientFilter("/**")
-@Requires(property = "micronaut.http.services.justserve.token")
+@Requires(property = "justserve.token")
 public class JustServeClientFilter {
     private final String token;
 
     private final Logger log = LoggerFactory.getLogger(JustServeClientFilter.class);
 
-    public JustServeClientFilter(@Property(name = "micronaut.http.services.justserve.token") String token) {
+    /**
+     * Constructs a new JustServeClientFilter.
+     *
+     * @param token The bearer token to be added to requests, injected from the
+     *              `justserve.token` property.
+     */
+    public JustServeClientFilter(@Property(name = "justserve.token") String token) {
         this.token = token;
     }
 
-
+    /**
+     * Filters outgoing requests to add a bearer token to the Authorization header.
+     *
+     * @param request The mutable HTTP request to be filtered.
+     */
     @RequestFilter
     public void doFilter(MutableHttpRequest<?> request) {
         log.debug("adding bearer token to request ({})", request.getMethod() + " " + request.getUri());

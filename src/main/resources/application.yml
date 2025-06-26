@@ -4,8 +4,9 @@ micronaut:
   http:
     services:
       justserve:
-        url: https://www.justserve.org
-        token:
+        url: ${JUSTSERVE_URL:`https://www.justserve.org`}
+justserve:
+  token: ${JUSTSERVE_TOKEN:'i-need-to-be-defined'}
 jackson:
   deserialization:
     ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true
