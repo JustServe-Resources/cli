@@ -28,7 +28,7 @@ class UserClientSpec extends Specification {
             throw new IllegalStateException("JUSTSERVE_TOKEN is set. Do not define this variable in testing.")
         }
         noAuthCtx = ApplicationContext.builder(EmbeddedServer)
-                .environmentVariableExcludes("JUSTSERVE_TOKEN")
+                .environmentVariableExcludes("JUSTSERVE_TOKEN", "TEST_TOKEN")
                 .build()
                 .start()
         noAuthUserClient = noAuthCtx.getBean(UserClient)
@@ -39,7 +39,7 @@ class UserClientSpec extends Specification {
                 ])
                 .build()
                 .start()
-        userClient = noAuthCtx.getBean(UserClient)
+        userClient = ctx.getBean(UserClient)
     }
 
     void cleanupSpec() {
