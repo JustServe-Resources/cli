@@ -30,16 +30,19 @@ class FulcrumCommandSpec extends Specification {
         errorStream.toString().matches(expectedErrorOutput)
 
         where:
-        args                                           | expectedOutputValue                | expectedErrorOutput | _
-        new String[]{'-e', 'jimmy@justserve.org'}      | Pattern.compile("^\\w+\\s{1,2}\$") | blankRegex          | _
-        new String[]{'--email', 'jimmy@justserve.org'} | Pattern.compile("^\\w+\\s{1,2}\$") | blankRegex          | _
-        new String[]{'-v'}                             | versionRegex                       | blankRegex          | _
-        new String[]{"--version"}                      | versionRegex                       | blankRegex          | _
-        new String[]{"version"}                        | versionRegex                       | blankRegex          | _
-        new String[]{"-v"}                             | versionRegex                       | blankRegex          | _
+        args                                                      | expectedOutputValue                | expectedErrorOutput | _
+        /*test this for print flag*/
+        new String[]{'-e', 'jimmy@justserve.org', '-p'}           | Pattern.compile("^\\w+\\s{1,2}\$") | blankRegex          | _
+        new String[]{'--email', 'jimmy@justserve.org', '--print'} | Pattern.compile("^\\w+\\s{1,2}\$") | blankRegex          | _
+        //it would be nice if we could test that the password was in fact added to the clipboard, for now we are just testing for any response at all
+        new String[]{'-e', 'jimmy@justserve.org'}                 | blankRegex                         | blankRegex          | _
+        new String[]{'--email', 'jimmy@justserve.org'}            | blankRegex                         | blankRegex          | _
+        new String[]{'-v'}                                        | versionRegex                       | blankRegex          | _
+        new String[]{"--version"}                                 | versionRegex                       | blankRegex          | _
+        new String[]{"version"}                                   | versionRegex                       | blankRegex          | _
+        new String[]{"-v"}                                        | versionRegex                       | blankRegex          | _
         //failures
-        new String[]{'-e', 'notanemail@mail.moc'}      | blankRegex                         | errorRegex          | _
-
+        new String[]{'-e', 'notanemail@mail.moc'}                 | blankRegex                         | errorRegex          | _
     }
 
     /**

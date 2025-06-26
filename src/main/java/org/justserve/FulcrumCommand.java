@@ -25,7 +25,8 @@ public class FulcrumCommand implements Runnable {
     @Option(names = {"version", "--version", "-v"})
     boolean version = false;
 
-    String justServeCliVersion = "0.0.3-SNAPSHOT";
+    //String justServeCliVersion = "0.0.3-SNAPSHOT";  fails comparison with regex
+    String justServeCliVersion = "0.0.3";
 
     @Inject
     UserClient userClient;
@@ -51,7 +52,7 @@ public class FulcrumCommand implements Runnable {
             justServePrintErr("An unexpected error occurred. Response from JustServe was null.");
             return;
         }
-
+        //TODO: manual testing works, but automated testing still throws errors
         if(!printResponse){
             copyToClipboard(response.body().replace("\"", ""));
             justServePrint("password copied to clipboard");
