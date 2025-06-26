@@ -41,7 +41,7 @@ public class FulcrumCommand implements Runnable {
             return;
         }
         HttpResponse<String> response;
-        if ("i-need-to-be-defined".equals(token)) {
+        if ("i-need-to-be-defined".equals(token) || null == token) {
             justServePrintErr("The Authentication token is not assigned as an environment variable. " +
                     "Please define the environment variable \"JUSTSERVE_TOKEN\" and try again.");
             return;

@@ -32,7 +32,6 @@ class FulcrumCommandSpec extends Specification {
 
     def setupSpec() {
         def props = new Properties()
-        // Assumes tests are run from the project's root directory
         new File('gradle.properties').withInputStream { stream ->
             props.load(stream)
         }
@@ -42,24 +41,38 @@ class FulcrumCommandSpec extends Specification {
     @Unroll("command with args: #args produces expected output when auth is set to #auth")
     def "commands should behave correctly when JUSTSERVE_TOKEN is unset"() {
         when:
+        if (null != System.getenv("JUSTSERVE_TOKEN")) {
+            throw new IllegalStateException("JUSTSERVE_TOKEN is set. Do not define this variable in testing.")
+        }
         ApplicationContext ctx
         if (auth) {
-            ctx = ApplicationContext.run(Environment.CLI, Environment.TEST)
+            ctx = ApplicationContext.builder()
+                    .environments(Environment.CLI, Environment.TEST)
+                    .properties([
+                            "JUSTSERVE_TOKEN": System.getenv("TEST_TOKEN")
+                    ])
+                    .build()
+                    .start()
         } else {
             ctx = ApplicationContext
                     .builder()
                     .environments(Environment.CLI, Environment.TEST)
                     .environmentVariableExcludes("JUSTSERVE_TOKEN")
                     .build()
+                    .start()
         }
-
 
         and:
         def (outputStream, errorStream) = executeCommand(ctx, args)
 
         then:
-        outputStream.toString().matches(expectedOutputValue)
-        errorStream.toString().matches(expectedErrorOutput)
+        verifyAll {
+            outputStream.toString().matches(expectedOutputValue)
+            errorStream.toString().matches(expectedErrorOutput)
+        }
+
+        and:
+        ctx.stop()
 
         where:
         args                                           | expectedOutputValue | expectedErrorOutput | auth  | _
@@ -67,16 +80,16 @@ class FulcrumCommandSpec extends Specification {
         new String[]{"--version"}                      | cliVersion          | blankRegex          | false | _
         new String[]{"version"}                        | cliVersion          | blankRegex          | false | _
         new String[]{"-e", "jimmy@justserve.org"}      | blankRegex          | tokenNotSetRegex    | false | _
-        new String[]{'--email', 'jimmy@justserve.org'} | blankRegex          | tokenNotSetRegex    | false | _
-        new String[]{'-e', 'notanemail@mail.moc'}      | blankRegex          | errorRegex          | false | _
-        new String[]{'--email', 'notanemail@mail.moc'} | blankRegex          | errorRegex          | false | _
+        new String[]{"--email", "jimmy@justserve.org"} | blankRegex          | tokenNotSetRegex    | false | _
+        new String[]{"-e", "notanemail@mail.moc"}      | blankRegex          | tokenNotSetRegex    | false | _
+        new String[]{"--email", "notanemail@mail.moc"} | blankRegex          | tokenNotSetRegex    | false | _
         new String[]{"-v"}                             | cliVersion          | blankRegex          | true  | _
         new String[]{"--version"}                      | cliVersion          | blankRegex          | true  | _
         new String[]{"version"}                        | cliVersion          | blankRegex          | true  | _
         new String[]{"-e", "jimmy@justserve.org"}      | successRegex        | blankRegex          | true  | _
-        new String[]{'--email', 'jimmy@justserve.org'} | successRegex        | blankRegex          | true  | _
-        new String[]{'-e', 'notanemail@mail.moc'}      | blankRegex          | errorRegex          | true  | _
-        new String[]{'--email', 'notanemail@mail.moc'} | blankRegex          | errorRegex          | true  | _
+        new String[]{"--email", "jimmy@justserve.org"} | successRegex        | blankRegex          | true  | _
+        new String[]{"-e", "notanemail@mail.moc"}      | blankRegex          | errorRegex          | true  | _
+        new String[]{"--email", "notanemail@mail.moc"} | blankRegex          | errorRegex          | true  | _
     }
 
     /**
