@@ -8,6 +8,9 @@ import org.justserve.client.UserClient;
 import org.justserve.model.UserHashRequestByEmail;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Clipboard;
 
 @Command(name = "justserve",
         description = "justserve-cli is a terminal tool to help specialists and admin using JustServe")
@@ -15,6 +18,9 @@ public class FulcrumCommand implements Runnable {
 
     @Option(names = {"-e", "--email"}, description = "email for the user whose temporary password will be generated")
     String email;
+
+    @Option(names = {"-p", "--print"}, description = "print the temporary password to console")
+    Boolean printResponse=false;
 
     @Option(names = {"version", "--version", "-v"})
     boolean version = false;
@@ -41,12 +47,25 @@ public class FulcrumCommand implements Runnable {
                     e.getResponse().status().getCode(), e.reason());
             return;
         }
-        if (response != null) {
-            justServePrint(response.body().replace("\"", ""));
-        } else {
+        if (response == null) {
             justServePrintErr("An unexpected error occurred. Response from JustServe was null.");
+            return;
         }
 
+        if(!printResponse){
+            copyToClipboard(response.body().replace("\"", ""));
+            justServePrint("password copied to clipboard");
+        }else{
+            justServePrint(response.body().replace("\"", ""));
+        }
+
+    }
+
+
+    public static void copyToClipboard(String text) {
+        StringSelection stringSelection = new StringSelection(text);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
     }
 
     void justServePrint(String message) {
