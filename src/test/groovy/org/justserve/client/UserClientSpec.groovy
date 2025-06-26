@@ -47,27 +47,36 @@ class UserClientSpec extends Specification {
         ctx.stop()
     }
 
-    def "get tempPassword for #email"() {
+    def "get tempPassword for #email and "() {
         when:
         HttpResponse<String> response = null
         def caughtException = null
+        def message = null
         try {
-            response = userClient.getTempPassword(new UserHashRequestByEmail(email))
+            response = client.getTempPassword(new UserHashRequestByEmail(email))
         } catch (e) {
             caughtException = e.class
+            message = e.message
         }
 
         then:
         if (null != caughtException) {
-            caughtException == expectedException
+            verifyAll {
+                caughtException == expectedException
+                message.contains(expectedMessage)
+            }
         } else {
-            expectedResponse == response.status()
-            response.body() != null
+            verifyAll {
+                expectedResponse == response.status()
+                response.body() != null
+            }
         }
 
         where:
-        expectedResponse | email                 | expectedException
-        HttpStatus.OK    | "jimmy@justserve.org" | null
-        null             | "notanemail@mail.moc" | HttpClientResponseException
+        expectedResponse | email                 | expectedException           | expectedMessage  | client           | _
+        HttpStatus.OK    | "jimmy@justserve.org" | null                        | null             | userClient       | _
+        null             | "notanemail@mail.moc" | HttpClientResponseException | "\"status\":500" | userClient       | _
+        null             | "jimmy@justserve.org" | HttpClientResponseException | "\"status\":401" | noAuthUserClient | _
+        null             | "notanemail@mail.moc" | HttpClientResponseException | "\"status\":401" | noAuthUserClient | _
     }
 }
