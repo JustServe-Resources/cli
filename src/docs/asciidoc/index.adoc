@@ -9,18 +9,18 @@ An administrative command-line tool for JustServe Specialists and administrators
 
 Before using the CLI, you must authenticate your session.
 
-. Set the `MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN` environment variable with a valid API token obtained from the JustServe platform.
+. Set the `JUSTSERVE_TOKEN` environment variable with a valid API token obtained from the JustServe platform.
 +
 [source,powershell]
 ----
 # For PowerShell (Windows)
-$env:MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN = "your_api_token_here"
+$env:JUSTSERVE_TOKEN = "your_api_token_here"
 ----
 +
 [source,bash]
 ----
 # For Bash (Linux/macOS)
-export MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN="your_api_token_here"
+export JUSTSERVE_TOKEN="your_api_token_here"
 ----
 +
 [NOTE]

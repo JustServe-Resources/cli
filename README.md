@@ -41,4 +41,4 @@ To generate the executable for your system, run `./gradlew nativeCompile`. The e
 
 ### Authenticate
 
-Authenticate with this tool by defining the `MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN` environment variable. Then request a token from the help center to populate the variable. 
+Authenticate with this tool by defining the `JUSTSERVE_TOKEN` environment variable. Then request a token from the help center to populate the variable. 
