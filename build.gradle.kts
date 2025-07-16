@@ -1,3 +1,6 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.util.*
+
 plugins {
     id("groovy") 
     id("io.micronaut.application") version "4.5.3"
@@ -38,11 +41,15 @@ java {
     sourceCompatibility = JavaVersion.toVersion("21")
     targetCompatibility = JavaVersion.toVersion("21")
 }
-tasks.withType<Test>().configureEach {
-    // This makes the project version available as a system property to the test JVM.
-    // Micronaut can then read and inject it using @Value.
-    systemProperty("justserveCliVersion", version)
+
+tasks.withType<ProcessResources> {
+    val props = Properties()
+    file("gradle.properties").inputStream().use { props.load(it) }
+    filesMatching("**/application.yml") {
+        filter(mapOf("tokens" to props), ReplaceTokens::class.java)
+    }
 }
+
 micronaut {
     testRuntime("spock2")
     openapi {
@@ -74,5 +81,3 @@ graalvmNative.binaries {
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
     jdkVersion = "21"
 }
-
-
