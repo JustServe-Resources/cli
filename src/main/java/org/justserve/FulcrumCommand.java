@@ -23,7 +23,8 @@ public class FulcrumCommand implements Runnable {
     @Option(names = {"version", "--version", "-v"})
     boolean version = false;
 
-    String justServeCliVersion = "0.0.3-SNAPSHOT";
+    @Value("${micronaut.application.version}")
+    String justserveCliVersion;
 
     @Inject
     UserClient userClient;
@@ -37,7 +38,7 @@ public class FulcrumCommand implements Runnable {
 
     public void run() {
         if (version) {
-            justServePrint(justServeCliVersion);
+            justServePrint(justserveCliVersion);
             return;
         }
         HttpResponse<String> response;
