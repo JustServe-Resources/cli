@@ -1,6 +1,7 @@
 micronaut:
   application:
-    name: fulcrum
+    name: justserve-cli
+    version: "@justserveCliVersion@"
   http:
     services:
       justserve:
