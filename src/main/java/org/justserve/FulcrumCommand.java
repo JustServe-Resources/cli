@@ -1,17 +1,18 @@
 package org.justserve;
 
+import static org.justserve.JustServeUtils.justServePrint;
+import static org.justserve.JustServeUtils.justServePrintErr;
+import org.justserve.client.UserClient;
+import org.justserve.model.UserHashRequestByEmail;
+
 import io.micronaut.configuration.picocli.PicocliRunner;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import jakarta.inject.Inject;
-import org.justserve.client.UserClient;
-import org.justserve.model.UserHashRequestByEmail;
+import jakarta.inject.Provider;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-
-import static org.justserve.JustServeUtils.justServePrint;
-import static org.justserve.JustServeUtils.justServePrintErr;
 
 @Command(name = "justserve",
         description = "justserve-cli is a terminal tool to help specialists and admin using JustServe")
@@ -27,7 +28,7 @@ public class FulcrumCommand implements Runnable {
     String justserveCliVersion;
 
     @Inject
-    UserClient userClient;
+    Provider<UserClient> userClientProvider;
 
     @Value("${justserve.token}")
     String token;
@@ -42,12 +43,13 @@ public class FulcrumCommand implements Runnable {
             return;
         }
         HttpResponse<String> response;
-        if ("i-need-to-be-defined".equals(token) || null == token) {
+        if ("i-need-to-be-defined".equals(token) || null == token ) {
             justServePrintErr("The Authentication token is not assigned as an environment variable. " +
                     "Please define the environment variable \"JUSTSERVE_TOKEN\" and try again.");
             return;
         }
         try {
+            UserClient userClient = userClientProvider.get();
             response = userClient.getTempPassword(new UserHashRequestByEmail(email));
         } catch (HttpClientResponseException e) {
             justServePrintErr("received an unexpected response from JustServe: %d (%s)%n",

@@ -24,18 +24,21 @@ class UserClientSpec extends Specification {
     UserClient userClient
 
     void setupSpec() {
+        def justServeUrl = System.getenv("JUSTSERVE_URL") ?: "https://www.justserve.org"
         if (null != System.getenv("JUSTSERVE_TOKEN")) {
             throw new IllegalStateException("JUSTSERVE_TOKEN is set. Do not define this variable in testing.")
         }
         noAuthCtx = ApplicationContext.builder(EmbeddedServer)
                 .environmentVariableExcludes("JUSTSERVE_TOKEN", "TEST_TOKEN")
+                .properties(["micronaut.http.services.justserve.url": justServeUrl])
                 .build()
                 .start()
         noAuthUserClient = noAuthCtx.getBean(UserClient)
         ctx = ApplicationContext.builder(EmbeddedServer)
                 .environmentVariableExcludes("JUSTSERVE_TOKEN")
                 .properties([
-                        "JUSTSERVE_TOKEN": System.getenv("TEST_TOKEN")
+                        "justserve.token"                      : System.getenv("MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN"),
+                        "micronaut.http.services.justserve.url": justServeUrl
                 ])
                 .build()
                 .start()

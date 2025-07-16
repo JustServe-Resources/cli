@@ -5,11 +5,11 @@ micronaut:
   http:
     services:
       justserve:
-        url: ${JUSTSERVE_URL:`https://www.justserve.org`}
+        url: ${:https://www.justserve.org}
     client:
       read-timeout: 20s
 justserve:
-  token: ${JUSTSERVE_TOKEN:i-need-to-be-defined}
+  token: ${:i-need-to-be-defined}
 jackson:
   deserialization:
     ACCEPT_EMPTY_STRING_AS_NULL_OBJECT: true

@@ -2,6 +2,7 @@ package org.justserve
 
 import io.micronaut.configuration.picocli.PicocliRunner
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Value
 import io.micronaut.context.env.Environment
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Shared
@@ -15,6 +16,9 @@ class FulcrumCommandSpec extends Specification {
 
     @Shared
     Pattern cliVersion
+
+    @Shared
+    String justServeUrl
 
     @Shared
     Pattern blankRegex = Pattern.compile "^\\s*\$"
@@ -31,6 +35,7 @@ class FulcrumCommandSpec extends Specification {
 
 
     def setupSpec() {
+        justServeUrl = System.getenv("JUSTSERVE_URL") ?: "https://www.justserve.org"
         def props = new Properties()
         new File('gradle.properties').withInputStream { stream ->
             props.load(stream)
@@ -49,7 +54,8 @@ class FulcrumCommandSpec extends Specification {
             ctx = ApplicationContext.builder()
                     .environments(Environment.CLI, Environment.TEST)
                     .properties([
-                            "JUSTSERVE_TOKEN": System.getenv("TEST_TOKEN")
+                            "justserve.token": System.getenv("MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN"),
+                            "micronaut.http.services.justserve.url"  : justServeUrl
                     ])
                     .build()
                     .start()
@@ -58,6 +64,7 @@ class FulcrumCommandSpec extends Specification {
                     .builder()
                     .environments(Environment.CLI, Environment.TEST)
                     .environmentVariableExcludes("JUSTSERVE_TOKEN")
+                    .properties(["micronaut.http.services.justserve.url": justServeUrl])
                     .build()
                     .start()
         }
