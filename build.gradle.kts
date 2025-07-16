@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.util.*
 
 plugins {
-    id("groovy") 
+    id("groovy")
     id("io.micronaut.application") version "4.5.3"
     id("com.gradleup.shadow") version "8.3.6"
     id("io.micronaut.openapi") version "4.5.3"
@@ -13,7 +13,7 @@ plugins {
 version = project.properties["justserveCliVersion"]!!
 group = "org.justserve"
 
-apply(from="gradle/asciidoc.gradle")
+apply(from = "gradle/asciidoc.gradle")
 
 repositories {
     mavenCentral()
