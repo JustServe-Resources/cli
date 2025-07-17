@@ -54,7 +54,7 @@ class FulcrumCommandSpec extends Specification {
             ctx = ApplicationContext.builder()
                     .environments(Environment.CLI, Environment.TEST)
                     .properties([
-                            "justserve.token": System.getenv("MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN"),
+                            "justserve.token": System.getenv("TEST_TOKEN"),
                             "micronaut.http.services.justserve.url"  : justServeUrl
                     ])
                     .build()
