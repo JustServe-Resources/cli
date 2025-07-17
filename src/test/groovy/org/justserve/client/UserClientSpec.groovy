@@ -37,7 +37,7 @@ class UserClientSpec extends Specification {
         ctx = ApplicationContext.builder(EmbeddedServer)
                 .environmentVariableExcludes("JUSTSERVE_TOKEN")
                 .properties([
-                        "justserve.token"                      : System.getenv("MICRONAUT_HTTP_SERVICES_JUSTSERVE_TOKEN"),
+                        "justserve.token"                      : System.getenv("TEST_TOKEN"),
                         "micronaut.http.services.justserve.url": justServeUrl
                 ])
                 .build()
