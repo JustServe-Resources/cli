@@ -2,23 +2,15 @@ package org.justserve
 
 import io.micronaut.configuration.picocli.PicocliRunner
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.annotation.Value
-import io.micronaut.context.env.Environment
-import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.util.regex.Pattern
 
-@MicronautTest()
-class FulcrumCommandSpec extends Specification {
+class FulcrumCommandSpec extends JustServeSpec {
 
     @Shared
     Pattern cliVersion
-
-    @Shared
-    String justServeUrl
 
     @Shared
     Pattern blankRegex = Pattern.compile "^\\s*\$"
@@ -35,7 +27,6 @@ class FulcrumCommandSpec extends Specification {
 
 
     def setupSpec() {
-        justServeUrl = System.getenv("JUSTSERVE_URL") ?: "https://www.justserve.org"
         def props = new Properties()
         new File('gradle.properties').withInputStream { stream ->
             props.load(stream)
@@ -43,60 +34,46 @@ class FulcrumCommandSpec extends Specification {
         cliVersion = Pattern.compile("^" + props.getProperty('justserveCliVersion') + "\\s*\$")
     }
 
-    @Unroll("command with args: #args produces expected output when auth is set to #auth")
-    def "commands should behave correctly when JUSTSERVE_TOKEN is unset"() {
+    @Unroll("command with args: calling 'justserve #flag #email' works as expected")
+    def "commands to query temporary password should behave as expected with or without authentication"() {
         when:
-        if (null != System.getenv("JUSTSERVE_TOKEN")) {
-            throw new IllegalStateException("JUSTSERVE_TOKEN is set. Do not define this variable in testing.")
-        }
-        ApplicationContext ctx
-        if (auth) {
-            ctx = ApplicationContext.builder()
-                    .environments(Environment.CLI, Environment.TEST)
-                    .properties([
-                            "justserve.token": System.getenv("TEST_TOKEN"),
-                            "micronaut.http.services.justserve.url"  : justServeUrl
-                    ])
-                    .build()
-                    .start()
+        def (outputStream, errorStream) = executeCommand(context as ApplicationContext, [flag, email] as String[])
+
+        then:
+        if (context == noAuthCtx) {
+            verifyAll {
+                outputStream.toString().matches(blankRegex)
+                errorStream.toString().matches(tokenNotSetRegex)
+            }
+        } else if (userEmail.equalsIgnoreCase(email as String)) {
+            verifyAll {
+                outputStream.toString().matches(successRegex)
+                errorStream.toString().matches(blankRegex)
+            }
         } else {
-            ctx = ApplicationContext
-                    .builder()
-                    .environments(Environment.CLI, Environment.TEST)
-                    .environmentVariableExcludes("JUSTSERVE_TOKEN")
-                    .properties(["micronaut.http.services.justserve.url": justServeUrl])
-                    .build()
-                    .start()
+            verifyAll {
+                outputStream.toString().matches(blankRegex)
+                errorStream.toString().matches(errorRegex)
+            }
         }
 
-        and:
-        def (outputStream, errorStream) = executeCommand(ctx, args)
+        where:
+        [flag, email, context] << [['-e', '--email'], [userEmail, "notanemail@mail.moc"], [noAuthCtx, ctx]].combinations()
+    }
+
+    @Unroll
+    def "querying version returns current version, with or without authentication"() {
+        when:
+        def (outputStream, errorStream) = executeCommand(context as ApplicationContext, args as String[])
 
         then:
         verifyAll {
-            outputStream.toString().matches(expectedOutputValue)
-            errorStream.toString().matches(expectedErrorOutput)
+            outputStream.toString().matches(cliVersion)
+            errorStream.toString().matches(blankRegex)
         }
 
-        and:
-        ctx.stop()
-
         where:
-        args                                           | expectedOutputValue | expectedErrorOutput | auth  | _
-        new String[]{"-v"}                             | cliVersion          | blankRegex          | false | _
-        new String[]{"--version"}                      | cliVersion          | blankRegex          | false | _
-        new String[]{"version"}                        | cliVersion          | blankRegex          | false | _
-        new String[]{"-e", "jimmy@justserve.org"}      | blankRegex          | tokenNotSetRegex    | false | _
-        new String[]{"--email", "jimmy@justserve.org"} | blankRegex          | tokenNotSetRegex    | false | _
-        new String[]{"-e", "notanemail@mail.moc"}      | blankRegex          | tokenNotSetRegex    | false | _
-        new String[]{"--email", "notanemail@mail.moc"} | blankRegex          | tokenNotSetRegex    | false | _
-        new String[]{"-v"}                             | cliVersion          | blankRegex          | true  | _
-        new String[]{"--version"}                      | cliVersion          | blankRegex          | true  | _
-        new String[]{"version"}                        | cliVersion          | blankRegex          | true  | _
-        new String[]{"-e", "jimmy@justserve.org"}      | successRegex        | blankRegex          | true  | _
-        new String[]{"--email", "jimmy@justserve.org"} | successRegex        | blankRegex          | true  | _
-        new String[]{"-e", "notanemail@mail.moc"}      | blankRegex          | errorRegex          | true  | _
-        new String[]{"--email", "notanemail@mail.moc"} | blankRegex          | errorRegex          | true  | _
+        [args, context] << [[['-v'], ['--version'], ['version']], [noAuthCtx, ctx]].combinations()
     }
 
     /**
@@ -108,7 +85,6 @@ class FulcrumCommandSpec extends Specification {
      * @return An array containing the captured stdout (at index 0) and stderr (at index 1)
      *         as String representations of the output streams.
      */
-
     String[] executeCommand(ApplicationContext ctx, String... args) {
         OutputStream out = new ByteArrayOutputStream()
         OutputStream err = new ByteArrayOutputStream()
@@ -117,4 +93,5 @@ class FulcrumCommandSpec extends Specification {
         PicocliRunner.run(FulcrumCommand.class, ctx, args)
         return new String[]{out, err}
     }
+
 }
