@@ -1,18 +1,19 @@
 package org.justserve;
 
-import static org.justserve.JustServeUtils.justServePrint;
-import static org.justserve.JustServeUtils.justServePrintErr;
-import org.justserve.client.UserClient;
-import org.justserve.model.UserHashRequestByEmail;
-
 import io.micronaut.configuration.picocli.PicocliRunner;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.justserve.client.UserClient;
+import org.justserve.model.UserHashRequestByEmail;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import picocli.jansi.graalvm.AnsiConsole;
+
+import static org.justserve.JustServeUtils.justServePrint;
+import static org.justserve.JustServeUtils.justServePrintErr;
 
 @Command(name = "justserve",
         description = "justserve-cli is a terminal tool to help specialists and admin using JustServe")
@@ -34,7 +35,10 @@ public class FulcrumCommand implements Runnable {
     String token;
 
     public static void main(String[] args) {
-        PicocliRunner.run(FulcrumCommand.class, args);
+        try (AnsiConsole ignored = AnsiConsole.windowsInstall()) {
+            PicocliRunner.run(FulcrumCommand.class, args);
+        }
+
     }
 
     public void run() {
