@@ -24,6 +24,8 @@ dependencies {
     annotationProcessor("info.picocli:picocli-codegen")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     implementation("info.picocli:picocli")
+    implementation("info.picocli:picocli-jansi-graalvm:1.2.0")
+    implementation("org.fusesource.jansi:jansi:1.18")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.picocli:micronaut-picocli")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
