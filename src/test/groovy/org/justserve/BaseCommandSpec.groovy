@@ -7,7 +7,7 @@ import spock.lang.Unroll
 
 import java.util.regex.Pattern
 
-class FulcrumCommandSpec extends JustServeSpec {
+class BaseCommandSpec extends JustServeSpec {
 
     @Shared
     Pattern cliVersion
@@ -90,7 +90,7 @@ class FulcrumCommandSpec extends JustServeSpec {
         OutputStream err = new ByteArrayOutputStream()
         System.setOut(new PrintStream(out))
         System.setErr(new PrintStream(err))
-        PicocliRunner.run(FulcrumCommand.class, ctx, args)
+        PicocliRunner.run(BaseCommand.class, ctx, args)
         return new String[]{out, err}
     }
 
