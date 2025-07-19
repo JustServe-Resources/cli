@@ -36,7 +36,7 @@ dependencies {
 
 
 application {
-    mainClass = "org.justserve.FulcrumCommand"
+    mainClass = "org.justserve.BaseCommand"
 }
 
 java {

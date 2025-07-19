@@ -17,7 +17,7 @@ import static org.justserve.JustServeUtils.justServePrintErr;
 
 @Command(name = "justserve",
         description = "justserve-cli is a terminal tool to help specialists and admin using JustServe")
-public class FulcrumCommand implements Runnable {
+public class BaseCommand implements Runnable {
 
     @Option(names = {"-e", "--email"}, description = "email for the user whose temporary password will be generated")
     String email;
@@ -36,7 +36,7 @@ public class FulcrumCommand implements Runnable {
 
     public static void main(String[] args) {
         try (AnsiConsole ignored = AnsiConsole.windowsInstall()) {
-            PicocliRunner.run(FulcrumCommand.class, args);
+            PicocliRunner.run(BaseCommand.class, args);
         }
 
     }
