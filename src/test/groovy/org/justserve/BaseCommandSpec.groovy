@@ -10,28 +10,21 @@ import java.util.regex.Pattern
 class BaseCommandSpec extends JustServeSpec {
 
     @Shared
-    Pattern cliVersion
-
-    @Shared
-    Pattern blankRegex = Pattern.compile "^\\s*\$"
-
-    @Shared
-    Pattern successRegex = Pattern.compile("^\\w+\\s{1,2}\$")
-
-    @Shared
-    Pattern errorRegex = Pattern.compile "^received an unexpected response from JustServe: \\d+ \\(.*\\)\\s*\$"
-
-    @Shared
-    Pattern tokenNotSetRegex = Pattern.compile "The Authentication token is not assigned as an " +
-            "environment variable\\. Please define the environment variable \"JUSTSERVE_TOKEN\" and try again\\.\\s*\$"
-
+    Pattern cliVersion, ansiRegex, blankRegex, successRegex, errorRegex, tokenNotSetRegex
 
     def setupSpec() {
         def props = new Properties()
         new File('gradle.properties').withInputStream { stream ->
             props.load(stream)
         }
-        cliVersion = Pattern.compile("^" + props.getProperty('justserveCliVersion') + "\\s*\$")
+        def ansi = "\\u001B\\[[;\\d]*m"
+        cliVersion = Pattern.compile("^${ansi}" + props.getProperty('justserveCliVersion') + "${ansi}\\s*\$")
+        blankRegex = Pattern.compile "^\\s*\$"
+        successRegex = Pattern.compile("^${ansi}\\w+${ansi}\\s*\$")
+        errorRegex = Pattern.compile("(?is)^${ansi}received an unexpected response from JustServe:${ansi}.*\\d+ \\(.*?\\)${ansi}\\s*\$")
+        tokenNotSetRegex = Pattern.compile("(?s)^${ansi}NO AUTHENTICATION PROVIDED${ansi}.*" +
+                "${ansi}The Authentication token is not assigned as an environment variable\\.${ansi}.*" +
+                "${ansi}Please define the environment variable \"JUSTSERVE_TOKEN\" and try again\\.${ansi}\\s*\$")
     }
 
     @Unroll("command with args: calling 'justserve #flag #email' works as expected")
@@ -42,21 +35,20 @@ class BaseCommandSpec extends JustServeSpec {
         then:
         if (context == noAuthCtx) {
             verifyAll {
-                outputStream.toString().matches(blankRegex)
-                errorStream.toString().matches(tokenNotSetRegex)
+                outputStream.matches(blankRegex)
+                errorStream.matches(tokenNotSetRegex)
             }
         } else if (userEmail.equalsIgnoreCase(email as String)) {
             verifyAll {
-                outputStream.toString().matches(successRegex)
-                errorStream.toString().matches(blankRegex)
+                outputStream.matches(successRegex)
+                errorStream.matches(blankRegex)
             }
         } else {
             verifyAll {
-                outputStream.toString().matches(blankRegex)
-                errorStream.toString().matches(errorRegex)
+                outputStream.matches(blankRegex)
+                errorStream.matches(errorRegex)
             }
         }
-
         where:
         [flag, email, context] << [['-e', '--email'], [userEmail, "notanemail@mail.moc"], [noAuthCtx, ctx]].combinations()
     }
@@ -68,8 +60,8 @@ class BaseCommandSpec extends JustServeSpec {
 
         then:
         verifyAll {
-            outputStream.toString().matches(cliVersion)
-            errorStream.toString().matches(blankRegex)
+            outputStream.matches(cliVersion)
+            errorStream.matches(blankRegex)
         }
 
         where:
@@ -91,7 +83,11 @@ class BaseCommandSpec extends JustServeSpec {
         System.setOut(new PrintStream(out))
         System.setErr(new PrintStream(err))
         PicocliRunner.run(BaseCommand.class, ctx, args)
-        return new String[]{out, err}
+        return new String[]{out.toString(), err.toString()}
+    }
+
+    String stripColor(String string) {
+        return ansiRegex.matcher(string).replaceAll("")
     }
 
 }
