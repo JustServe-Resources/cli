@@ -12,8 +12,8 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.jansi.graalvm.AnsiConsole;
 
-import static org.justserve.JustServeUtils.justServePrint;
-import static org.justserve.JustServeUtils.justServePrintErr;
+import static org.justserve.JustServePrinter.printError;
+import static org.justserve.JustServePrinter.printNormal;
 
 @Command(name = "justserve",
         description = "justserve-cli is a terminal tool to help specialists and admin using JustServe")
@@ -43,27 +43,29 @@ public class BaseCommand implements Runnable {
 
     public void run() {
         if (version) {
-            justServePrint(justserveCliVersion);
+            printNormal(justserveCliVersion);
             return;
         }
         HttpResponse<String> response;
         if ("i-need-to-be-defined".equals(token) || null == token ) {
-            justServePrintErr("The Authentication token is not assigned as an environment variable. " +
-                    "Please define the environment variable \"JUSTSERVE_TOKEN\" and try again.");
+            printError(("NO AUTHENTICATION PROVIDED" + System.lineSeparator() +
+                    "The Authentication token is not assigned as an environment variable." + System.lineSeparator() +
+                    "Please define the environment variable \"JUSTSERVE_TOKEN\" and try again."));
             return;
         }
         try {
             UserClient userClient = userClientProvider.get();
             response = userClient.getTempPassword(new UserHashRequestByEmail(email));
         } catch (HttpClientResponseException e) {
-            justServePrintErr("received an unexpected response from JustServe: %d (%s)%n",
-                    e.getResponse().status().getCode(), e.reason());
+            String errorMessage = "Received an unexpected response from JustServe:" +
+                    String.format("%n%d (%s)", e.getResponse().status().getCode(), e.reason());
+            printError(errorMessage);
             return;
         }
         if (response != null) {
-            justServePrint(response.body().replace("\"", ""));
+            printNormal(response.body().replace("\"", "").trim());
         } else {
-            justServePrintErr("An unexpected error occurred. Response from JustServe was null.");
+            printError("An unexpected error occurred. Response from JustServe was null.");
         }
     }
 }
