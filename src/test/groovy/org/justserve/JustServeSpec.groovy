@@ -16,14 +16,19 @@ class JustServeSpec extends Specification {
     String justServeUrl, userEmail
 
     def setupSpec() {
+        if(System.getenv("TEST_TOKEN") == null) {
+            throw new IllegalStateException("TEST_TOKEN is NOT set. Define this variable for" +
+                    "" +
+                    " testing.")
+        }
+        if (null != System.getenv("JUSTSERVE_TOKEN")) {
+            throw new IllegalStateException("JUSTSERVE_TOKEN is set. Do not define this variable in testing.")
+        }
         justServeUrl = System.getenv("JUSTSERVE_URL") ?: "https://www.justserve.org"
         if (justServeUrl.toLowerCase().contains("dev")) {
             userEmail = "userc5f660c0-5c3a-42a8-bbe0-8dad54d00f42@fake.justserve.org"
         } else {
             userEmail = "jimmy@justserve.org"
-        }
-        if (null != System.getenv("JUSTSERVE_TOKEN")) {
-            throw new IllegalStateException("JUSTSERVE_TOKEN is set. Do not define this variable in testing.")
         }
         ctx = ApplicationContext.builder()
                     .environments(Environment.CLI, Environment.TEST)
