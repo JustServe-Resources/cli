@@ -5,7 +5,7 @@ micronaut:
   http:
     services:
       justserve:
-        url: ${:https://www.justserve.org}
+        url: https://www.justserve.org
     client:
       read-timeout: 20s
 justserve:
